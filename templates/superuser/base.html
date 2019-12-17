@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/boostrap-3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/base.css">
+    <script type="text/javascript" src="/static/getcookie.js"></script>
+    <script type="text/javascript" src="/static/jquery1.12.4.min.js"></script>
+    <script type="text/javascript" src="/static/jquery.cookie.js"></script>
+    <script type = 'text/javascript' src="/static/boostrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap-switch.min.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap-switch.min.css">
+    <script type="text/javascript" src="/static/toastr.js"></script>
+    <link rel="stylesheet" href="/static/toastr.css">
+    {% block style %}{% endblock %}
+    <style>
+        #icon{
+            width: 22px;
+            height: 20px;
+            display: inline-block;
+            margin-right: 13px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-default" style="height: 225px; background-color: #0099FF">
+        <p class="title">上海大学教务管理系统</p>
+        <p class="title1">自强不息，先天下之忧而忧，后天下之乐而乐</p>
+        {% block component %}{% endblock %}
+    </nav>
+    {% block navigate %}{% endblock %}
+    <div class="container">
+        <div class="row" style="margin-right: -13%; margin-left: -12%">
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <text style="margin-left: 39%">控制面板</text>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li role="presentation" class="{% block active_stu %}{% endblock %}">
+                                <a href="{% url "Index" %}"><img id="icon" src="{% block icon_src %}{% endblock %}">学生信息表</a>
+                            </li>
+                            <li role="presentation" class="{% block active_school %}{% endblock %}">
+                                <a href="{% url "SchoolTable" %}"><img id="icon" src="{% block icon_src1 %}{% endblock %}">院系表</a>
+                            </li>
+                            <li role="presentation" class="{% block active_teacher %}{% endblock %}">
+                                <a href="{% url "TeacherTable" %}"><img id="icon" src="{% block icon_src2 %}{% endblock %}">教师表</a></li>
+                            <li role="presentation" class="{% block active_lesson %}{% endblock %}">
+                                <a href="{% url "LessonTable" %}"><img id="icon" src="{% block icon_src3 %}{% endblock %}">课程表</a></li>
+                            <li role="presentation" class="{% block active_open_lesson %}{% endblock %}"><a href="{% url "OpenTable" %}">开课表</a></li>
+                            <li role="presentation" class="{% block active_select_lesson %}{% endblock %}"><a href="{% url "Select_lesson" %}">选课表</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <text style="margin-left: 35%">编辑系统信息</text>
+                    </div>
+                    <div class="panel-body">
+                        {% block panel_content %}{% endblock %}
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <text style="margin-left: 35%">管理选课</text>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-4" style="margin-right: 6%">选课状态</label>
+                            <input type="checkbox" name="checkbox" class="checkbox">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4">当前学期</label>
+                            <div class="col-sm-8">
+                                <text style="font-size: 15px" id="semester_status"></text>
+                            </div>
+                        </div>
+                        <br>
+                        <button type="button" style="width: 93%;margin-left: 10px;margin-top: 18px"
+                                id="edit_semester" class="btn btn-info">编辑当前学期</button>
+                    </div>
+                </div>
+                <button type="button" style="width: 100%;height: 40px;" onclick="Logout()" class="btn btn-danger">退出登录</button>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-12">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="MyModal_start" aria-labelledby="MyModalLabel" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 20%;" role="document">
+            <div class="modal-content">
+                <form class="form-horizontal" autocomplete="off" method="post" accept-charset="UTF-8">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">x</button>
+                        <h3>提示信息</h3>
+                    </div>
+                    <div class="modal-body">
+                        <text style="font-size: 17px;">确认开始选课吗？</text>
+                        <br>
+                        <text style="color:#f30;display: inline-block;margin-top: 12px;">
+                            请确认当前学期，开始后学生将可以选课
+                        </text>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" id="confirm_status" type="button">开始选课</button>
+                        <button class="btn btn-info" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+			</div>
+        </div>
+    </div>
+    <div class="modal fade" id="MyModal_semester_change" aria-labelledby="MyModalLabel" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 20%;" role="document">
+            <div class="modal-content">
+                <form class="form-horizontal" autocomplete="off" method="post" accept-charset="UTF-8">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">x</button>
+                        <h3>编辑当前学期</h3>
+                    </div>
+                    <div class="modal-body">
+                       <div class="form-group">
+                           <select id="semester_change" style="width: 36%;margin-left: 10%;" class="form-control"></select>
+                       </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" style="width: 20%;margin-right: 50%" id="edit_semester_confirm" type="button">确认</button>
+                        <button class="btn btn-info" style="width: 20%;margin-right: 4%" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+			</div>
+        </div>
+    </div>
+    <div class="modal fade" id="MyModal_end" aria-labelledby="MyModalLabel" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form class="form-horizontal" autocomplete="off" method="post" accept-charset="UTF-8">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">x</button>
+                        <h3>提示信息</h3>
+                    </div>
+                    <div class="modal-body">
+                        <text style="font-size: 17px;">确认停止选课吗？</text>
+                        <br>
+                        <text style="color:#f30;display: inline-block;margin-top: 12px;">
+                            选课停止后学生将无法再进行选课
+                        </text>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" id="stop_status" type="button">停止选课</button>
+                        <button class="btn btn-info" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+			</div>
+        </div>
+    </div>
+    {% block modal %}{% endblock %}
+    {% block script %}{% endblock %}
+    <script>
+        var origin_status = 0
+    </script>
+    <script>
+        function Logout() {
+            document.cookie = "role="+escape("")+";max-age="+(-1)+";Path="+escape('/');
+            document.cookie = "status="+escape("")+";max-age="+(-1)+";Path="+escape('/');
+            location.reload();
+        }
+    </script>
+    <script>
+        $(function () {
+            $(".checkbox").bootstrapSwitch({
+                onText:'正在选课',
+                offText:'禁止选课',
+                onColor:'success',
+                offColor:'danger',
+                size:'min',
+                onSwitchChange:function (event, state) {
+                    if (state === true){
+                        if (origin_status === 0) {
+                            if (document.getElementById('semester_status').innerText === ""){
+                                toastr.error("请确认当前学期");
+                                $("input[name='checkbox']").bootstrapSwitch("state", false)
+                            }
+                            else{
+                                 $("#MyModal_start").modal();
+                            }
+                        }
+                    }
+                    if (state === false){
+                        if (origin_status === 1){
+                            $("#MyModal_end").modal();
+                        }
+                    }
+                }
+            })
+        })
+    </script>
+    <script>
+        window.onload = function () {
+            let data = new FormData();
+            data.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+            $.ajax({
+                url:'{% url 'Ensure_status' %}',
+                type:'post',
+                data:data,
+                dataType:'json',
+                processData:false,
+                contentType:false,
+                success(res){
+                    if (res.code === 0){
+                        console.log(res);
+                        if (res.status === 1){
+                            origin_status = 1;
+                            let mes = res.semester;
+                            $("input[name='checkbox']").bootstrapSwitch("state", true);
+                            $("#semester_status").text(mes);
+                        }
+                    }
+                },
+                fail() {
+                    console.log('接口调用失败')
+                }
+            });
+            let data_obj = new FormData();
+            data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+            $.ajax({
+                url:'{% url "Get_Status" %}',
+                type:'post',
+                data:data_obj,
+                dataType:'json',
+                processData:false,
+                contentType:false,
+                success(res){
+                    $.each(res.result, function (key, value) {
+                        $("#semester_change").append("<option>" + value["fields"]["semester"] + "</option>")
+                    })
+                },
+                fail() {
+                    console.log("调用接口失败")
+                }
+           })
+       }
+    </script>
+    <script>
+        $(function () {
+            $("#MyModal_start").on('hidden.bs.modal', function () {
+                $("input[name='checkbox']").bootstrapSwitch("state", false)
+            });
+            $("#MyModal_end").on('hidden.bs.modal', function () {
+                $("input[name='checkbox']").bootstrapSwitch("state", true)
+            })
+        })
+    </script>
+    <script>
+        toastr.options.positionClass = "toast-top-center";
+        $("#confirm_status").click(function () {
+            var data_obj = new FormData();
+            var semester = document.getElementById('semester_status').innerText;
+            data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+            data_obj.append('semester', semester);
+            $.ajax({
+                url:'{% url 'Change_status' %}',
+                type:'post',
+                data:data_obj,
+                dataType:'json',
+                processData:false,
+                contentType:false,
+                success(res) {
+                    if (res.code === 0){
+                        toastr.success("开启选课成功");
+                        origin_status = 1;
+                        setTimeout(function () {
+                            location.reload()
+                        }, 2000)
+                    }
+                }
+            })
+        });
+        $("#stop_status").click(function () {
+            var data_obj = new FormData();
+            var semester = document.getElementById('semester_status').innerText;
+            data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+            data_obj.append('semester', semester);
+             $.ajax({
+                url:'{% url 'Stop_status' %}',
+                type:'post',
+                data:data_obj,
+                dataType:'json',
+                processData:false,
+                contentType:false,
+                success(res){
+                    if (res.code === 0){
+                        origin_status = 0;
+                        toastr.success("关闭选课成功");
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000)
+                    }
+                }
+            })
+        });
+        $("#edit_semester").click(function () {
+            $("#MyModal_semester_change").modal();
+        });
+        $("#edit_semester_confirm").click(function () {
+            if (origin_status === 1){
+                toastr.error("当前正在选课，无法修改")
+            }
+            else{
+                let sems = $("#semester_change").val();
+                $("#semester_status").text(sems);
+                $("#MyModal_semester_change").modal('hide');
+            }
+        })
+    </script>
+</body>
+</html>

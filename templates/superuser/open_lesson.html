@@ -1,0 +1,182 @@
+{% extends './base.html' %}
+
+{% block active_open_lesson %}active{% endblock %}
+
+{% block title %}开课表{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="/static/toastr.css">
+    <script type="text/javascript" src="/static/toastr.js"></script>
+{% endblock %}
+
+{% block icon_src %}/static/image/student.png{% endblock %}
+{% block icon_src1 %}/static/image/school1.png{% endblock %}
+{% block icon_src2 %}/static/image/teacher.png{% endblock %}
+{% block icon_src3 %}/static/image/table.png{% endblock %}
+
+{% block content %}
+    <table class="table table-striped">
+        <tr>
+            <th>学期</th>
+            <th>课号</th>
+            <th>工号</th>
+            <th>上课时间</th>
+        </tr>
+
+        {% for lesson in page_of_list %}
+            <tr>
+                <td>{{ lesson.xq }}</td>
+                <td>{{ lesson.kh }}</td>
+                <td>{{ lesson.gh }}</td>
+                <td>{{ lesson.sksj}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination" style="margin-left: 42%">
+            <li>
+                {% if page_of_list.has_previous %}
+                    <a href="?page={{ page_of_list.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                 {% else %}
+                    <span aria-hidden="true">&laquo;</span>
+                {% endif %}
+            </li>
+            {% for page_number in page_range %}
+                {% if page_number == page_of_list.number %}
+                        <li class="active"><span>{{ page_number }}</span></li>
+                {% else %}
+                    <li><a href="?page={{ page_number }}">{{ page_number }}</a></li>
+                {% endif %}
+            {% endfor %}
+            <li>
+                {% if page_of_list.has_next %}
+                    <a href="?page={{ page_of_list.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                {% else %}
+                    <span aria-hidden="true">&raquo;</span>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+{% endblock %}
+
+{% block modal %}
+    <div class="modal fade" id="OpenLesson_add" aria-labelledby="MyModalLabel" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form class="form-horizontal" autocomplete="off" method="post" accept-charset="UTF-8">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">x</button>
+                        <h3>添加开课信息</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">学期</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="semester" class="form-control" name="semester" placeholder="输入该课程开设学期">
+                            </div>
+                            <div class="col-sm-4 tips"><span>* </span>必填</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile" class="col-sm-2 control-label">课号</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="lesson_number" class="form-control" name="lesson_number" placeholder="输入该课程课号">
+                            </div>
+                            <div class="col-sm-4 tips"><span>* </span>必填</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">工号</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="teacher_number" name="teacher_number" placeholder="输入授课教师工号" class="form-control">
+                            </div>
+                            <div class="col-sm-4 tips"><span>* </span>必填</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">上课时间</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="hours" placeholder="输入上课时间" name="hours" class="form-control">
+                            </div>
+                            <div class="col-sm-4 tips"><span>* </span>必填</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="open_lesson_save" class="btn btn-primary" type="button">保存</button>
+                        <button class="btn btn-info" data-dismiss="modal">关闭</button>
+                    </div>
+                </form>
+			</div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block panel_content %}
+    <ul class="nav nav-pills nav-stacked">
+        <li role="presentation" id="add_open_lesson"><a href="#">添加开课信息</a></li>
+        <li role="presentation"><a href="{% url "EditOpenLesson" %}">编辑开课信息</a></li>
+    </ul>
+{% endblock %}
+
+{% block script %}
+    <script>
+        toastr.options.positionClass = "toast-top-center";
+        $("#add_open_lesson").click(function () {
+            $("#OpenLesson_add").modal();
+        });
+        $("#open_lesson_save").click(function () {
+            var semester = $("#semester").val();
+            var lesson_number = $("#lesson_number").val();
+            var teacher_number = $("#teacher_number").val();
+            var hours = $("#hours").val();
+            if (semester === "" || lesson_number === "" || teacher_number === "" || hours === ""){
+                toastr.error("表格应当填写完整")
+            }
+            else
+            {
+                var data_obj = new FormData();
+                data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+                data_obj.append('semester', semester);
+                data_obj.append('lesson_number', lesson_number);
+                data_obj.append('teacher_number', teacher_number);
+                data_obj.append('hours', hours);
+                $.ajax({
+                    url:'{% url "AddOpenLesson" %}',
+                    type:'post',
+                    data:data_obj,
+                    dataType:'json',
+                    processData:false,
+                    contentType:false,
+                    success(res) {
+                        if (res.code === -1){
+                            toastr.error("不存在该课程号")
+                        }
+                        if (res.code === -2){
+                            toastr.error("不存在该教师号")
+                        }
+                        if (res.code === -3){
+                            toastr.error("该课程已经开设")
+                        }
+                        if (res.code === 0){
+                            location.reload();
+                        }
+                    },
+                    fail(){
+                        toastr.error("添加失败")
+                    }
+                })
+            }
+        })
+    </script>
+    <script>
+        window.onpageshow = function () {
+            var role = getCookie('role');
+            var status = getCookie('status');
+            if (role !== "superuser" || status === ""){
+                window.location.href = "{% url 'Login' %}"
+            }
+        }
+    </script>
+{% endblock %}

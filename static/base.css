@@ -1,0 +1,22 @@
+
+p.title{
+    display: inline-block;
+    font-size: 45px;
+    color: #ffffff;
+    margin-top: 3%;
+    margin-left: 10%;
+    font-family: '微软雅黑 Light';
+    font-weight: bold;
+}
+p.title1{
+    font-size: 20px;
+    color: white;
+    margin-left: 20%;
+}
+select.select{
+    display: inline-block;
+    margin-left: 20px;
+    width: 20%;
+    height: 30px;
+    margin-top: 7px;
+}

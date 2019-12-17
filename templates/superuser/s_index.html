@@ -1,0 +1,16 @@
+{% extends './base.html' %}
+
+{% block title %}学生主界面{% endblock %}
+
+{% block content %}
+    <h1>这是学生主页面，待开发</h1>
+    <script>
+        window.onpageshow = function () {
+            var role = getCookie('role');
+            var status = getCookie('status');
+            if (role !== "student" || status === ""){
+                window.location.href = "{% url 'Login' %}"
+            }
+        }
+    </script>
+{% endblock %}

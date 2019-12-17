@@ -1,0 +1,361 @@
+{% extends './base.html' %}
+
+{% block title %}编辑教师{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="/static/toastr.css">
+    <script type="text/javascript" src="/static/toastr.js"></script>
+{% endblock %}
+
+{% block active_teacher %}active{% endblock %}
+
+{% block icon_src %}/static/image/student.png{% endblock %}
+{% block icon_src1 %}/static/image/school1.png{% endblock %}
+{% block icon_src2 %}/static/image/teacher1.png{% endblock %}
+{% block icon_src3 %}/static/image/table.png{% endblock %}
+
+{% block content %}
+     <table class="table table-striped">
+        <tr>
+            <th>工号</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>出生日期</th>
+            <th>学历</th>
+            <th>基本工资</th>
+            <th>院系号</th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for teacher in page_of_list %}
+            <tr>
+                <td>{{ teacher.gh }}</td>
+                <td>{{ teacher.xm }}</td>
+                <td>{{ teacher.xb }}</td>
+                <td>{{ teacher.csrq }}</td>
+                <td>{{ teacher.xl }}</td>
+                <td>{{ teacher.jbgz }}</td>
+                <td>{{ teacher.yxh }}</td>
+                <td><button id="confirm" onclick="Select('{{ teacher.gh }}','{{ teacher.xm }}','{{ teacher.xb }}','{{ teacher.csrq }}'
+                        ,'{{ teacher.xl }}', '{{ teacher.jbgz }}','{{ teacher.yxh }}')" type="button" class="btn btn-info">选择</button></td>
+                <td><button type="button" class="btn btn-danger" onclick="Delete('{{ teacher.gh }}')">删除</button></td>
+            </tr>
+        {% endfor %}
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination" style="margin-left: 42%">
+            <li>
+                {% if page_of_list.has_previous %}
+                    <a href="?page={{ page_of_list.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                 {% else %}
+                    <span aria-hidden="true">&laquo;</span>
+                {% endif %}
+            </li>
+            {% for page_number in page_range %}
+                {% if page_number == page_of_list.number %}
+                        <li class="active"><span>{{ page_number }}</span></li>
+                {% else %}
+                    <li><a href="?page={{ page_number }}">{{ page_number }}</a></li>
+                {% endif %}
+            {% endfor %}
+            <li>
+                {% if page_of_list.has_next %}
+                    <a href="?page={{ page_of_list.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                {% else %}
+                    <span aria-hidden="true">&raquo;</span>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+    <div class="modal fade" id="MyTeacher1" aria-labelledby="MyModalLabel" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="teacher_form" action="{% url 'AmendTeacher' %}" class="form-horizontal" autocomplete="off" method="post" accept-charset="UTF-8">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">x</button>
+                        <h3>编辑教师信息</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">工号</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="number" class="form-control" name="number"readonly="readonly">
+                            </div>
+                            <div class="col-sm-4 tips"><span>* </span>不允许被修改</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile" class="col-sm-2 control-label">教师姓名</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="teacher_name" class="form-control" name="teacher_name" placeholder="输入教师姓名" >
+                            </div>
+                            <div class="col-sm-4 tips"><span>* </span>必填</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">性别</label>
+                            <div class="col-sm-6">
+                                <select name="gender" id="gender" class="form-control">
+                                    <option>男</option>
+                                    <option>女</option>
+                                </select>
+                            </div>
+				            <div class="col-sm-4 tips"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="regtime2" style="margin-right: 15px" class="col-sm-2 control-label">出生日期</label>
+                            <div class="col-sm-8 input-group" id="regtime2">
+                                <input type="text" id="time" name="time" class="form-control" placeholder="XXXX-MM-DD" >
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">学历</label>
+                            <div class="col-sm-6">
+                                <select id="study" name="study" class="form-control">
+                                    <option>讲师</option>
+                                    <option>副教授</option>
+                                    <option>教授</option>
+                                </select>
+                            </div>
+				            <div class="col-sm-4 tips"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">基本工资</label>
+                            <div class="col-sm-6">
+                                <input type="number" id="money" name="money" class="form-control" placeholder="输入该教师基本工资">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">院系号</label>
+                            <div class="col-sm-6">
+                                <select name="school" id="school" class="form-control">
+                                   {% for school in school_list  %}
+                                       <option>{{ school.yxh }}</option>
+                                   {% endfor %}
+                                </select>
+                            </div>
+				            <div class="col-sm-4 tips"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">保存</button>
+                        <button class="btn btn-info" data-dismiss="modal">关闭</button>
+                    </div>
+                </form>
+			</div>
+        </div>
+    </div>
+    <div class="modal fade" id="MyTeacher_add" aria-labelledby="MyModalLabel" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="teacher_form" class="form-horizontal" autocomplete="off" method="post" accept-charset="UTF-8">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">x</button>
+                        <h3>添加教师信息</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label">工号</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="number_add" class="form-control" name="number" placeholder="输入教师工号">
+                            </div>
+                            <div class="col-sm-4 tips"><span>* </span>必填</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile" class="col-sm-2 control-label">教师姓名</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="teacher_name_add" class="form-control" name="teacher_name" placeholder="输入教师姓名" >
+                            </div>
+                            <div class="col-sm-4 tips"><span>* </span>必填</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">性别</label>
+                            <div class="col-sm-6">
+                                <select name="gender" id="gender_add" class="form-control">
+                                    <option>男</option>
+                                    <option>女</option>
+                                </select>
+                            </div>
+				            <div class="col-sm-4 tips"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="regtime2" style="margin-right: 15px" class="col-sm-2 control-label">出生日期</label>
+                            <div class="col-sm-8 input-group" id="regtime2">
+                                <input type="text" id="time_add" name="time" class="form-control" placeholder="XXXX-MM-DD" >
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">学历</label>
+                            <div class="col-sm-6">
+                                <select id="study_add" name="study" class="form-control">
+                                    <option>讲师</option>
+                                    <option>副教授</option>
+                                    <option>教授</option>
+                                </select>
+                            </div>
+				            <div class="col-sm-4 tips"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">基本工资</label>
+                            <div class="col-sm-6">
+                                <input type="number" id="money_add" name="money" class="form-control" placeholder="输入该教师基本工资">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">院系号</label>
+                            <div class="col-sm-6">
+                                <select name="school" id="school_add" class="form-control">
+                                   {% for school in school_list  %}
+                                       <option>{{ school.yxh }}</option>
+                                   {% endfor %}
+                                </select>
+                            </div>
+				            <div class="col-sm-4 tips"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="teacher_save" class="btn btn-primary" type="button">保存</button>
+                        <button class="btn btn-info" data-dismiss="modal">关闭</button>
+                    </div>
+                </form>
+			</div>
+        </div>
+    </div>
+    <div class="modal fade" id="Delete_teacher" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <form class="form-horizontal" method="post" autocomplete="off" action="{% url "DeleteTeacher" %}?from={{ request.get_full_path }}" accept-charset="UTF-8">
+                   {% csrf_token %}
+                   <div class="modal-header">
+                      <button type="button" class="close"data-dismiss="modal" aria-hidden="true">×</button>
+                      <h4 class="modal-title" style="text-align: center;font-size: 25px;">提示信息</h4>
+                   </div>
+                   <div class="modal-body">
+                       <text style="font-size: 17px;">确认删除该教师信息吗?</text>
+                       <br>
+                       <text style="color:#f30;display: inline-block;margin-top: 12px;">
+                           系统将同时删除该教师所有相关信息
+                       </text>
+                       <input type="hidden" name="number" id="teacher_number">
+                   </div>
+                   <div class="modal-footer">
+                       <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                       <button type="submit" class="btn btn-danger">确认删除</button>
+                   </div>
+               </form>
+           </div>
+      </div>
+    </div>
+    <script>
+        function Select(gh,xm,xb,csrq,xl,jbgz,yxh) {
+            var time = [];
+            $("#number").val(gh);
+            $("#teacher_name").val(xm);
+            $("#gender").val(xb);
+            time.push(csrq.split('年')[0]);
+            time.push(csrq.split('年')[1].split('月')[0]);
+            time.push(csrq.split('年')[1].split('月')[1].split('日')[0]);
+            var str = time.join('-');
+            $("#time").val(str);
+            $("#study").val(xl);
+            $("#money").val(jbgz);
+            $('#school').val(yxh);
+            $("#MyTeacher1").modal();
+        }
+    </script>
+    <script>
+        function Delete(teacher_num) {
+            $("#teacher_number").val(teacher_num);
+            $("#Delete_teacher").modal();
+        }
+    </script>
+{% endblock %}
+
+{% block panel_content %}
+     <ul class="nav nav-pills nav-stacked">
+        <li role="presentation" id="addteacher"><a href="#">添加教师信息</a></li>
+        <li role="presentation"><a href="#">编辑教师信息</a></li>
+    </ul>
+{% endblock %}
+
+{% block script %}
+    <script>
+        toastr.options.positionClass = "toast-top-center";
+        $("#addteacher").click(function () {
+            $("#MyTeacher_add").modal()
+        });
+        $("#teacher_save").click(function () {
+            var number = $("#number_add").val();
+            var teacher_name = $("#teacher_name_add").val();
+            var gender = $("#gender_add").val();
+            var time = $("#time_add").val();
+            var study = $("#study_add").val();
+            var money = $("#money_add").val();
+            var school = $("#school_add").val();
+            var result = time.match(/((^((1[8-9]\d{2})|([2-9]\d{3}))(-)(10|12|0?[13578])(-)(3[01]|[12][0-9]|0?[1-9])$)|(^((1[8-9]\d{2})|([2-9]\d{3}))(-)(11|0?[469])(-)(30|[12][0-9]|0?[1-9])$)|(^((1[8-9]\d{2})|([2-9]\d{3}))(-)(0?2)(-)(2[0-8]|1[0-9]|0?[1-9])$)|(^([2468][048]00)(-)(0?2)(-)(29)$)|(^([3579][26]00)(-)(0?2)(-)(29)$)|(^([1][89][0][48])(-)(0?2)(-)(29)$)|(^([2-9][0-9][0][48])(-)(0?2)(-)(29)$)|(^([1][89][2468][048])(-)(0?2)(-)(29)$)|(^([2-9][0-9][2468][048])(-)(0?2)(-)(29)$)|(^([1][89][13579][26])(-)(0?2)(-)(29)$)|(^([2-9][0-9][13579][26])(-)(0?2)(-)(29)$))/);
+            if (number === "" || teacher_name === "" || time === "" || study === "" || school === "") {
+                toastr.error("表格必须要填写完整")
+            }
+            else if (result === null){
+                toastr.error("请输入正确的日期格式")
+            }
+            else
+            {
+                var data_obj = new FormData();
+                data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+                data_obj.append('number', number);
+                data_obj.append('teacher_name', teacher_name);
+                data_obj.append('gender', gender);
+                data_obj.append('time', time);
+                data_obj.append('study',study);
+                data_obj.append('money', money);
+                data_obj.append('school', school);
+                $.ajax({
+                    url:'{% url "AddTeacher" %}',
+                    type:'post',
+                    data:data_obj,
+                    dataType:'json',
+                    processData:false,
+                    contentType:false,
+                    success(res){
+                        if (res.code === 0){
+                            location.reload();
+                        }
+                        if (res.code === -1){
+                            toastr.error("该教师工号已经存在")
+                        }
+                    },
+                    fail(res){
+                        console.log(res)
+                    },
+                    error: function (XMLHttpResponse, textStatus, errorThrown) {
+                        console.log("1 异步调用返回失败,XMLHttpResponse.readyState:"+XMLHttpResponse.readyState);
+                        console.log("2 异步调用返回失败,XMLHttpResponse.status:"+XMLHttpResponse.status);
+                        console.log("3 异步调用返回失败,textStatus:"+textStatus);
+                        console.log("4 异步调用返回失败,errorThrown:"+errorThrown);
+                    }
+                })
+            }
+        })
+    </script>
+    <script>
+        window.onpageshow = function () {
+            var role = getCookie('role');
+            var status = getCookie('status');
+            if (role !== "superuser" || status === ""){
+                window.location.href = "{% url 'Login' %}"
+            }
+        }
+    </script>
+{% endblock %}
+

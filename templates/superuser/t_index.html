@@ -1,0 +1,16 @@
+{% extends './base.html' %}
+
+{% block title %}教师主页面{% endblock %}
+
+{% block content %}
+    <h1>这是教师登录后的主界面，待开发</h1>
+    <script>
+        window.onpageshow = function () {
+            var role = getCookie('role');
+            var status = getCookie('status');
+            if (role !== "teacher" || status === ""){
+                window.location.href = "{% url 'Login' %}"
+            }
+        }
+    </script>
+{% endblock %}
