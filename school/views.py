@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import Stu_table, School, Teacher, Lesson, Open_lesson, Option_lesson, \
-    Student_Login, Teacher_Login, Supersuser, Lesson_Status
+    Student_Login, Teacher_Login, Supersuser, present_semester
 from django.core.paginator import Paginator
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 import json
 from django.core import serializers
+from django.db import connection
 
 
 def Login(request):
@@ -14,6 +15,40 @@ def Login(request):
     school_list = School.objects.all()
     context['school_list'] = school_list
     return render(request, './superuser/login.html', context)
+
+def Main(request):
+    return render(request, './superuser/main.html', {})
+
+
+@require_http_methods(['POST'])
+def Main_Get(request):
+    response = {}
+    semester = request.POST.get('semester')
+    stu_count = Option_lesson.objects.filter(xq=semester).values('xh_id').distinct().count()
+    teacher_count = Open_lesson.objects.filter(xq=semester).values('gh_id').distinct().count()
+    cursor = connection.cursor()
+    cursor.execute("select xm,count(xh_id) from school_teacher tb1,school_option_lesson tb2 "
+                   "where tb1.gh=tb2.gh_id and xq='"+semester+"' group by tb1.gh order by 2 desc;")
+    teacher_love = cursor.fetchall()
+    cursor.execute("select km,count(xh_id) from school_option_lesson tb1,school_lesson tb2 where tb1.kh_id=tb2.kh "
+                   "and xq='"+semester+"' group by kh_id order by 2 desc;")
+    lesson_love = cursor.fetchall()
+    cursor.execute("select count(kh_id), mc from school_open_lesson tb1, school_lesson tb2, school_school tb3 where "
+                   "tb3.yxh=tb2.yxh_id and tb2.kh=tb1.kh_id and xq='"+semester+"' group by yxh_id order by 1 desc;")
+    school_love = cursor.fetchall()
+    cursor.execute("select count(xh_id),mc from school_school tb1,school_lesson tb2,school_option_lesson tb3 where "
+                   "tb1.yxh=tb2.yxh_id and tb2.kh=tb3.kh_id and xq='"+semester+"' group by tb1.yxh order by 1 desc;")
+    school_count = cursor.fetchall()
+    response['stu_count'] = stu_count
+    response['teacher_count'] = teacher_count
+    lesson_count = Open_lesson.objects.filter(xq=semester).all().count()
+    response['lesson_count'] = lesson_count
+    response['teacher_love'] = list(teacher_love)[:5] if len(list(teacher_love)) > 5 else list(teacher_love)
+    response['lesson_love'] = list(lesson_love)[:5] if len(list(lesson_love)) > 5 else list(lesson_love)
+    response['school_love'] = list(school_love)
+    response['school_count'] = list(school_count)
+    response['code'] = 0
+    return JsonResponse(response)
 
 
 @require_http_methods(['POST'])
@@ -87,7 +122,6 @@ def LoginInterface(request):
 
 
 def Index(request):
-    #if request.user.is_authenticated:
     context = {}
     student_list = Stu_table.objects.all()
     paginator = Paginator(student_list, 20)
@@ -760,7 +794,7 @@ def S_Index(request):
 @require_http_methods(['POST'])
 def Get_Status(request):
     response = {}
-    semester_list = Lesson_Status.objects.all()
+    semester_list = present_semester.objects.all()
     response['result'] = json.loads(serializers.serialize('json', semester_list))
     response['message'] = 'success'
     response['code'] = 0
@@ -771,8 +805,8 @@ def Get_Status(request):
 def Change_status(request):
     response = {}
     semester = request.POST.get('semester')
-    lesson = Lesson_Status.objects.get(semester=semester)
-    lesson.status = '1'
+    lesson = present_semester.objects.get(xq=semester)
+    lesson.xk = '1'
     lesson.save()
     response['message'] = 'success'
     response['code'] = 0
@@ -782,17 +816,19 @@ def Change_status(request):
 @require_http_methods(['POST'])
 def Ensure_status(request):
     response = {}
-    if Lesson_Status.objects.filter(status='1').count():
-        semester = Lesson_Status.objects.get(status='1').semester
-        response['status'] = 1
-        response['semester'] = semester
-        response['message'] = 'success'
-        response['code'] = 0
-    else:
-        response['status'] = 0
-        response['semester'] = ""
-        response['message'] = 'success'
-        response['code'] = 0
+    if present_semester.objects.filter(dqxq='1').count():
+        semester = present_semester.objects.get(dqxq='1').xq
+        status = present_semester.objects.get(dqxq='1').xk
+        if status == '1':
+            response['status'] = 1
+            response['semester'] = semester
+            response['message'] = 'success'
+            response['code'] = 0
+        else:
+            response['status'] = 0
+            response['semester'] = semester
+            response['message'] = 'success'
+            response['code'] = 0
     return JsonResponse(response)
 
 
@@ -800,9 +836,25 @@ def Ensure_status(request):
 def Delete_status(request):
     response = {}
     semester = request.POST.get('semester')
-    lesson = Lesson_Status.objects.get(semester=semester)
-    lesson.status = '0'
+    lesson = present_semester.objects.get(xq=semester)
+    lesson.xk = '0'
     lesson.save()
     response['message'] = 'success'
+    response['code'] = 0
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Change_present_semester(request):
+    response = {}
+    semester = request.POST.get('semester')
+    semester_ori = request.POST.get('semester_ori')
+    sem_ori = present_semester.objects.get(xq=semester_ori)
+    sem = present_semester.objects.get(xq=semester)
+    sem_ori.dqxq = '0'
+    sem.dqxq = '1'
+    sem_ori.save()
+    sem.save()
+    response['message'] = 'suucess'
     response['code'] = 0
     return JsonResponse(response)

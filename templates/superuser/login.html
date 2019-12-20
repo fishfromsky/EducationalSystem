@@ -211,7 +211,7 @@
                              else {
                                   document.cookie = "role="+escape("superuser") + ";max-age="+(60*60) + ";Path=" + escape("/");
                                   document.cookie = "status=" + escape("1") + ";max-age="+(60*60)+";Path=" + escape("/");
-                                  window.location.href = '{% url 'Index' %}';
+                                  window.location.href = '{% url 'Main' %}';
                              }
                          }
                      }

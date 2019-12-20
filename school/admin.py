@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import School, Stu_table, Teacher, Lesson, Open_lesson, \
-    Option_lesson, Teacher_Login, Student_Login, Supersuser,Lesson_Status
+    Option_lesson, Teacher_Login, Student_Login, Supersuser, present_semester
 
 
 @admin.register(Teacher_Login)
@@ -55,7 +55,7 @@ class Option_lessonAdmin(admin.ModelAdmin):
     ordering = ('-zpcj',)
 
 
-@admin.register(Lesson_Status)
-class Lesson_StatusAdmin(admin.ModelAdmin):
-    list_display = ('semester', 'status')
+@admin.register(present_semester)
+class present_semesterAdmin(admin.ModelAdmin):
+    list_display = ('xq', 'xk', 'dqxq')
     ordering = ('-id',)

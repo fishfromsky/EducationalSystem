@@ -102,10 +102,10 @@ class Option_lesson(models.Model):
         index_together = ["xh", "xq", "kh", "gh"]
 
 
-class Lesson_Status(models.Model):
-    semester = models.CharField(max_length=50)
-    status = models.CharField(max_length=5)
-
+class present_semester(models.Model):
+    xq = models.CharField(max_length=50)
+    xk = models.CharField(max_length=5)
+    dqxq = models.CharField(max_length=5)
 
 
 

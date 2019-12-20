@@ -26,5 +26,7 @@ urlpatterns = [
     path('get_status/', views.Get_Status, name="Get_Status"),
     path('change_status/', views.Change_status, name="Change_status"),
     path('ensure_status/', views.Ensure_status, name="Ensure_status"),
-    path('stop_status/', views.Delete_status, name="Stop_status")
+    path('stop_status/', views.Delete_status, name="Stop_status"),
+    path('change_present_semester', views.Change_present_semester, name="Change_present_semester"),
+    path('main_get/', views.Main_Get, name="Main_Get")
 ]

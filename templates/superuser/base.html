@@ -39,6 +39,9 @@
                     </div>
                     <div class="panel-body">
                         <ul class="nav nav-pills nav-stacked">
+                            <li role="presentation" class="{% block active_main %}{% endblock %}">
+                                <a href="{% url "Main" %}">主页面</a>
+                            </li>
                             <li role="presentation" class="{% block active_stu %}{% endblock %}">
                                 <a href="{% url "Index" %}"><img id="icon" src="{% block icon_src %}{% endblock %}">学生信息表</a>
                             </li>
@@ -220,6 +223,10 @@
                             $("input[name='checkbox']").bootstrapSwitch("state", true);
                             $("#semester_status").text(mes);
                         }
+                        if (res.status === 0){
+                            let mes = res.semester;
+                            $("#semester_status").text(mes);
+                        }
                     }
                 },
                 fail() {
@@ -237,7 +244,7 @@
                 contentType:false,
                 success(res){
                     $.each(res.result, function (key, value) {
-                        $("#semester_change").append("<option>" + value["fields"]["semester"] + "</option>")
+                        $("#semester_change").append("<option>" + value["fields"]["xq"] + "</option>")
                     })
                 },
                 fail() {
@@ -313,8 +320,35 @@
             }
             else{
                 let sems = $("#semester_change").val();
-                $("#semester_status").text(sems);
-                $("#MyModal_semester_change").modal('hide');
+                let sems_ori = document.getElementById('semester_status').innerText;
+                let data_obj = new FormData();
+                data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+                data_obj.append('semester', sems);
+                data_obj.append('semester_ori', sems_ori);
+                $.ajax({
+                    url:'{% url "Change_present_semester" %}',
+                    type:'post',
+                    data:data_obj,
+                    dataType:'json',
+                    processData:false,
+                    contentType:false,
+                    success(res){
+                        if (res.code === 0){
+                            toastr.success("编辑当前学期成功");
+                            $("#semester_status").text(sems);
+                            $("#MyModal_semester_change").modal('hide');
+                            setTimeout(function () {
+                                location.reload();
+                            },1000)
+                        }
+                        else{
+                            toastr.error("修改失败");
+                        }
+                    },
+                    fail(){
+                        toastr.error("修改失败")
+                    }
+                })
             }
         })
     </script>

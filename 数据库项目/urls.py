@@ -21,6 +21,7 @@ import school.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.Index, name="Index"),
+    path('main/', views.Main, name="Main"),
     path('school/', views.SchoolTable, name="SchoolTable"),
     path('teacher/', views.TeacherTable, name="TeacherTable"),
     path('lesson/', views.LessonTable, name="LessonTable"),
@@ -36,5 +37,5 @@ urlpatterns = [
     path('login/', views.Login, name="Login"),
     path('t_/', views.T_Index, name="T_Index"),
     path('s_/', views.S_Index, name="S_Index"),
-    path('register/', views.Register, name='Register')
+    path('register/', views.Register, name='Register'),
 ]
