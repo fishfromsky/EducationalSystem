@@ -38,4 +38,8 @@ urlpatterns = [
     path('t_/', views.T_Index, name="T_Index"),
     path('s_/', views.S_Index, name="S_Index"),
     path('register/', views.Register, name='Register'),
+    path('t_lesson/<str:number>/<str:semester>', views.t_Lesson, name="t_Lesson"),
+    path('t_select/<str:number>/<str:semester>', views.t_select_lesson, name='t_Select_Lesson'),
+    path('t_register/<str:number>/<str:semester>', views.Grade, name="Grade"),
+    path('t_grade/<str:number>/<str:semester>/<str:lesson>', views.Register_Grade, name="RegisterGrade")
 ]

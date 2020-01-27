@@ -73,6 +73,8 @@ class Lesson(models.Model):
     xf = models.SmallIntegerField(default=4)
     xs = models.SmallIntegerField(default=40)
     yxh = models.ForeignKey(School, on_delete=models.CASCADE)
+    rule_ps = models.PositiveSmallIntegerField(default=3)
+    rule_ks = models.PositiveSmallIntegerField(default=7)
 
     def __str__(self):
         return self.kh
@@ -106,8 +108,6 @@ class present_semester(models.Model):
     xq = models.CharField(max_length=50)
     xk = models.CharField(max_length=5)
     dqxq = models.CharField(max_length=5)
-
-
-
+    cjxq = models.CharField(max_length=5, default='0')
 
 

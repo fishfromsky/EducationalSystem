@@ -3,18 +3,44 @@
 <head>
    <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/static/boostrap-3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/teacher/base.css">
+    <link rel="stylesheet" href="/static/main.css">
     <script type="text/javascript" src="/static/getcookie.js"></script>
     <script type="text/javascript" src="/static/jquery1.12.4.min.js"></script>
     <script type="text/javascript" src="/static/jquery.cookie.js"></script>
     <script type = 'text/javascript' src="/static/boostrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/bootstrap-switch.min.js"></script>
-    <link rel="stylesheet" href="/static/bootstrap-switch.min.css">
+    <script type="text/javascript" src="/static/echarts.min.js"></script>
     <script type="text/javascript" src="/static/toastr.js"></script>
     <link rel="stylesheet" href="/static/toastr.css">
     {% block style %}{% endblock %}
 </head>
+<style>
+    #current_semester{
+        font-size: 14px;
+        margin-left: 22px;
+        font-weight: bold;
+    }
+    #semester_change{
+        width: 52%;
+        margin-left: 21px;
+        display: inline
+    }
+    #edit_semester_confirm{
+        display: inline;
+        margin-left: 22px;
+        margin-bottom: 5px;
+    }
+    .rowline{
+        padding: 10px 5px;
+    }
+    .btn_logout{
+        width: 100%;
+        height: 40px;
+    }
+</style>
 <body>
     <nav class="navbar navbar-default" style="height: 225px; background-color: #0099FF">
         <p class="title">上海大学教务管理系统</p>
@@ -26,32 +52,110 @@
         <div class="row" style="margin-right: -13%; margin-left: -12%">
             <div class="col-lg-3 col-md-3">
                 <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <text style="margin-left: 39%">控制面板</text>
+                    <div class="panel-heading" style="text-align: center">
+                        <span>控制面板</span>
                     </div>
                     <div class="panel-body">
                         <ul class="nav nav-pills nav-stacked">
-                            <li role="presentation" class="{% block active_stu %}{% endblock %}">
-                                <a href="{% url "Index" %}"><img id="icon" src="{% block icon_src %}{% endblock %}">学生信息表</a>
+                            <li role="presentation" onclick="Transfer_main()" class="{% block main_active %}{% endblock %}">
+                                <a href="#">主界面</a>
                             </li>
-                            <li role="presentation" class="{% block active_school %}{% endblock %}">
-                                <a href="{% url "SchoolTable" %}"><img id="icon" src="{% block icon_src1 %}{% endblock %}">院系表</a>
+                            <li role="presentation" onclick="Transfer_lesson()" class="{% block class_info %}{% endblock %}">
+                                <a href="#">本学期授课信息</a>
                             </li>
-                            <li role="presentation" class="{% block active_teacher %}{% endblock %}">
-                                <a href="{% url "TeacherTable" %}"><img id="icon" src="{% block icon_src2 %}{% endblock %}">教师表</a></li>
-                            <li role="presentation" class="{% block active_lesson %}{% endblock %}">
-                                <a href="{% url "LessonTable" %}"><img id="icon" src="{% block icon_src3 %}{% endblock %}">课程表</a></li>
-                            <li role="presentation" class="{% block active_open_lesson %}{% endblock %}"><a href="{% url "OpenTable" %}">开课表</a></li>
-                            <li role="presentation" class="{% block active_select_lesson %}{% endblock %}"><a href="{% url "Select_lesson" %}">选课表</a></li>
+                            <li role="presentation" onclick="Transfer_select_lesson()" class="{% block select_class %}{% endblock %}">
+                                <a href="#">查看选课信息</a>
+                            </li>
+                            <li role="presentation" onclick="Transfer_grade()" class="{% block register_grade %}{% endblock %}">
+                               <a href="#">登记学生成绩</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading" style="text-align: center">
+                        <span>查看历史信息</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row rowline">
+                            <text id="current_semester">当前学期:</text>
+                            <text id="semester" style="margin-left: 48px;font-size: 15px;"></text>
+                        </div>
+                        <div class="row rowline">
+                            <select id="semester_change" class="form-control"></select>
+                            <button class="btn btn-primary" id="edit_semester_confirm">点击查看</button>
+                        </div>
+                    </div>
+                </div>
+                {% block panel %}{% endblock %}
+                <button type="button" onclick="Logout()" class="btn btn-danger btn_logout">退出登录</button>
             </div>
             <div class="col-lg-9 col-md-9 col-sm-12">
                 {% block content %}{% endblock %}
             </div>
         </div>
     </div>
+    <script>
+        function Transfer_main() {
+            clearCookie('semester')
+        }
+    </script>
+    <script>
+        function Transfer_grade() {
+            let teacher_number = getCookie('number');
+            let teacher_semester = document.getElementById('semester').innerText;
+            window.location.href = "http://localhost:8000/t_register/"+teacher_number+'/'+teacher_semester;
+        }
+        function Transfer_lesson() {
+            let teacher_number = getCookie('number');
+            let semester_number = document.getElementById('semester').innerText;
+            window.location.href = "http://localhost:8000/t_lesson/"+teacher_number+'/'+semester_number;
+         }
+         function Transfer_select_lesson() {
+             let teacher_number = getCookie('number');
+             let semester_number = document.getElementById('semester').innerText;
+             window.location.href = "http://localhost:8000/t_select/"+teacher_number+'/'+semester_number;
+         }
+    </script>
+    <script>
+        function Logout() {
+            document.cookie = "role="+escape("")+";max-age="+(-1)+";Path="+escape('/');
+            document.cookie = "status="+escape("")+";max-age="+(-1)+";Path="+escape('/');
+            document.cookie = "number="+escape("")+";max-age="+(-1)+";Path="+escape('/');
+            document.cookie = "semester="+escape("")+";max-age="+(-1)+";Path="+escape('/');
+            location.reload();
+        }
+    </script>
+    <script>
+        window.onload = function () {
+            var role = getCookie('role');
+            var status = getCookie('status');
+            if (role !== "teacher" || status === ""){
+                window.location.href = "{% url 'Login' %}"
+            }
+            else{
+                var data_obj = new FormData();
+                data_obj.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+                $.ajax({
+                    url:'{% url "Init_teacher" %}',
+                    type:'post',
+                    data:data_obj,
+                    dataType:'json',
+                    processData:false,
+                    contentType:false,
+                    success(res){
+                        if (res.code === 0){
+                            let semester = res.semester;
+                            $("#semester").text(semester);
+                            $.each(res.semester_list, function (key, value) {
+                                $("#semester_change").append("<option>" + value["fields"]["xq"] + "</option>")
+                            });
+                        }
+                    }
+                })
+            }
+        }
+    </script>
     {% block modal %}{% endblock %}
     {% block script %}{% endblock %}
 </body>

@@ -28,5 +28,11 @@ urlpatterns = [
     path('ensure_status/', views.Ensure_status, name="Ensure_status"),
     path('stop_status/', views.Delete_status, name="Stop_status"),
     path('change_present_semester', views.Change_present_semester, name="Change_present_semester"),
-    path('main_get/', views.Main_Get, name="Main_Get")
+    path('main_get/', views.Main_Get, name="Main_Get"),
+    path('teacher_init/', views.Init_Teacher, name="Init_teacher"),
+    path('teacher_index/', views.Get_Teacher_status, name="Teacher_status"),
+    path('save_grade/', views.Save_grade, name="Save_grade"),
+    path('get_percent/', views.Get_Percent, name='Get_Percent'),
+    path('start_grade_register/', views.Start_Grade_register, name="StartGrade"),
+    path('stop_grade_register/', views.Stop_Grade_register, name="StopGrade")
 ]

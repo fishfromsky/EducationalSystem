@@ -32,6 +32,7 @@ class Stu_tableAdmin(admin.ModelAdmin):
     list_display = ('xh', 'xm', 'xb', 'csrq', 'jg', 'sjhm', 'yxh')
     ordering = ('-xh',)
 
+
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
     list_display = ('gh', 'xm', 'xb', 'csrq', 'xl', 'jbgz', 'yxh')
@@ -40,7 +41,7 @@ class TeacherAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ('kh', 'km', 'xf', 'xs', 'yxh')
+    list_display = ('kh', 'km', 'xf', 'xs', 'yxh', 'rule_ps', 'rule_ks')
     ordering = ('-kh',)
 
 
@@ -57,5 +58,5 @@ class Option_lessonAdmin(admin.ModelAdmin):
 
 @admin.register(present_semester)
 class present_semesterAdmin(admin.ModelAdmin):
-    list_display = ('xq', 'xk', 'dqxq')
+    list_display = ('xq', 'xk', 'dqxq', 'cjxq')
     ordering = ('-id',)

@@ -21,6 +21,20 @@
             display: inline-block;
             margin-right: 13px;
         }
+        .grade_box{
+            padding: 5px;
+            margin-top: 10px;
+        }
+        .grade-box-text{
+            float: left;
+            line-height: 34px;
+            margin-left: 9px;
+            font-weight: bold;
+        }
+        .grade-box-button{
+            float: left;
+            margin-left: 47px;
+        }
     </style>
 </head>
 <body>
@@ -40,7 +54,7 @@
                     <div class="panel-body">
                         <ul class="nav nav-pills nav-stacked">
                             <li role="presentation" class="{% block active_main %}{% endblock %}">
-                                <a href="{% url "Main" %}">主页面</a>
+                                <a href="{% url "Main" %}"><img id="icon" src="{% block icon_src4 %}{% endblock %}">主页面</a>
                             </li>
                             <li role="presentation" class="{% block active_stu %}{% endblock %}">
                                 <a href="{% url "Index" %}"><img id="icon" src="{% block icon_src %}{% endblock %}">学生信息表</a>
@@ -52,10 +66,15 @@
                                 <a href="{% url "TeacherTable" %}"><img id="icon" src="{% block icon_src2 %}{% endblock %}">教师表</a></li>
                             <li role="presentation" class="{% block active_lesson %}{% endblock %}">
                                 <a href="{% url "LessonTable" %}"><img id="icon" src="{% block icon_src3 %}{% endblock %}">课程表</a></li>
-                            <li role="presentation" class="{% block active_open_lesson %}{% endblock %}"><a href="{% url "OpenTable" %}">开课表</a></li>
-                            <li role="presentation" class="{% block active_select_lesson %}{% endblock %}"><a href="{% url "Select_lesson" %}">选课表</a></li>
+                            <li role="presentation" class="{% block active_open_lesson %}{% endblock %}">
+                                <a href="{% url "OpenTable" %}"><img id="icon" src="{% block icon_src5 %}{% endblock %}">开课表</a>
+                            </li>
+                            <li role="presentation" class="{% block active_select_lesson %}{% endblock %}">
+                                <a href="{% url "Select_lesson" %}"><img id="icon" src="{% block icon_src6 %}{% endblock %}">选课表</a>
+                            </li>
                         </ul>
                     </div>
+
                 </div>
                 <div class="panel panel-danger">
                     <div class="panel-heading">
@@ -71,7 +90,7 @@
                     </div>
                     <div class="panel-body">
                         <div class="form-group">
-                            <label class="col-sm-4" style="margin-right: 6%">选课状态</label>
+                            <label class="col-sm-4" style="margin-right: 6%;line-height: 34px">选课状态</label>
                             <input type="checkbox" name="checkbox" class="checkbox">
                         </div>
                         <div class="form-group">
@@ -81,8 +100,13 @@
                             </div>
                         </div>
                         <br>
-                        <button type="button" style="width: 93%;margin-left: 10px;margin-top: 18px"
-                                id="edit_semester" class="btn btn-info">编辑当前学期</button>
+                        <button type="button" style="width: 93%;margin-left: 10px;margin-top: 18px"  id="edit_semester" class="btn btn-info">编辑当前学期</button>
+                        <div class="grade_box">
+                            <span class="grade-box-text">开启成绩登录:</span>
+                            <div class="grade-box-button">
+                                <input class="checkbox_grade" type="checkbox" name="checkbox_grade">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <button type="button" style="width: 100%;height: 40px;" onclick="Logout()" class="btn btn-danger">退出登录</button>
@@ -139,7 +163,7 @@
         </div>
     </div>
     <div class="modal fade" id="MyModal_end" aria-labelledby="MyModalLabel" tabindex="-1">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" role="document" style="margin-top: 20%">
             <div class="modal-content">
                 <form class="form-horizontal" autocomplete="off" method="post" accept-charset="UTF-8">
                     {% csrf_token %}
@@ -162,10 +186,59 @@
 			</div>
         </div>
     </div>
+     <div class="modal fade" id="MyModal_grade_start" aria-labelledby="MyModalLabel" tabindex="-1">
+        <div class="modal-dialog" role="document" style="margin-top: 20%">
+            <div class="modal-content">
+                <form class="form-horizontal" autocomplete="off" method="post" accept-charset="UTF-8">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">x</button>
+                        <h3>提示信息</h3>
+                    </div>
+                    <div class="modal-body">
+                        <text style="font-size: 17px;font-weight: bold">确认开始成绩登录吗</text>
+                        <br>
+                        <text style="color:#f30;display: inline-block;margin-top: 12px;">
+                            开始后教师将可以登录学生成绩
+                        </text>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" id="start_grade_register" type="button">开启成绩登记</button>
+                        <button class="btn btn-info" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+			</div>
+        </div>
+    </div>
+    <div class="modal fade" id="MyModal_grade_stop" aria-labelledby="MyModalLabel" tabindex="-1">
+        <div class="modal-dialog" role="document" style="margin-top: 20%">
+            <div class="modal-content">
+                <form class="form-horizontal" autocomplete="off" method="post" accept-charset="UTF-8">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">x</button>
+                        <h3>提示信息</h3>
+                    </div>
+                    <div class="modal-body">
+                        <text style="font-size: 17px;font-weight: bold">确认终止成绩登录吗</text>
+                        <br>
+                        <text style="color:#f30;display: inline-block;margin-top: 12px;">
+                            终止后教师将不能再登记学生成绩
+                        </text>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" id="stop_grade_register" type="button">终止成绩登记</button>
+                        <button class="btn btn-info" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+			</div>
+        </div>
+    </div>
     {% block modal %}{% endblock %}
     {% block script %}{% endblock %}
     <script>
-        var origin_status = 0
+        var origin_status = 0;   //页面加载时记录初始选课状态
+        var origin_grade_status = 0    //页面加载时初始成绩登陆状态
     </script>
     <script>
         function Logout() {
@@ -200,6 +273,25 @@
                         }
                     }
                 }
+            });
+            $(".checkbox_grade").bootstrapSwitch({
+                onText: '登记中',
+                offText: '禁止中',
+                onColor: 'success',
+                offColor: 'danger',
+                size:'min',
+                onSwitchChange:function (event,state) {
+                    if (state === true){
+                        if (origin_grade_status === 0){
+                            $("#MyModal_grade_start").modal()
+                        }
+                    }
+                    else{
+                        if (origin_grade_status === 1){
+                            $("#MyModal_grade_stop").modal()
+                        }
+                    }
+                }
             })
         })
     </script>
@@ -216,16 +308,29 @@
                 contentType:false,
                 success(res){
                     if (res.code === 0){
-                        console.log(res);
                         if (res.status === 1){
                             origin_status = 1;
                             let mes = res.semester;
                             $("input[name='checkbox']").bootstrapSwitch("state", true);
+                            if (res.grade === '1'){
+                                 origin_grade_status = 1;
+                                $("input[name='checkbox_grade']").bootstrapSwitch('state',true);
+                            }
+                            else{
+                                $("input[name='checkbox_grade']").bootstrapSwitch('state',false);
+                            }
                             $("#semester_status").text(mes);
                         }
                         if (res.status === 0){
                             let mes = res.semester;
                             $("#semester_status").text(mes);
+                            if (res.grade === '1'){
+                                origin_grade_status = 1;
+                                $("input[name='checkbox_grade']").bootstrapSwitch('state',true);
+                            }
+                            else{
+                                $("input[name='checkbox_grade']").bootstrapSwitch('state',false);
+                            }
                         }
                     }
                 },
@@ -260,6 +365,12 @@
             });
             $("#MyModal_end").on('hidden.bs.modal', function () {
                 $("input[name='checkbox']").bootstrapSwitch("state", true)
+            });
+            $("#MyModal_grade_start").on('hidden.bs.modal',function () {
+               $("input[name='checkbox_grade']").bootstrapSwitch('state',false)
+            });
+            $("#MyModal_grade_stop").on('hidden.bs.modal',function () {
+               $("input[name='checkbox_grade']").bootstrapSwitch('state',true)
             })
         })
     </script>
@@ -283,7 +394,7 @@
                         origin_status = 1;
                         setTimeout(function () {
                             location.reload()
-                        }, 2000)
+                        }, 1000)
                     }
                 }
             })
@@ -306,7 +417,49 @@
                         toastr.success("关闭选课成功");
                         setTimeout(function () {
                             location.reload();
-                        }, 2000)
+                        }, 1000)
+                    }
+                }
+            })
+        });
+        $("#start_grade_register").click(function () {
+           let data_obj = new FormData();
+           data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+           $.ajax({
+               url:'{% url 'StartGrade' %}',
+               data:data_obj,
+               type:'post',
+               dataType:'json',
+               processData:false,
+               contentType:false,
+               success(res){
+                   if (res.code === 0){
+                       origin_grade_status = 1;
+                       toastr.success('已开始登记成绩');
+                       setTimeout(function () {
+                           location.reload()
+                       },1000)
+                   }
+               }
+           })
+        });
+        $("#stop_grade_register").click(function () {
+            let data_obj = new FormData();
+            data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+            $.ajax({
+                url:'{% url 'StopGrade' %}',
+                data:data_obj,
+                dataType:'json',
+                type:'post',
+                processData:false,
+                contentType:false,
+                success(res){
+                    if (res.code === 0){
+                        origin_grade_status = 0;
+                        toastr.success('已停止登记成绩');
+                        setTimeout(function () {
+                            location.reload()
+                        },1000)
                     }
                 }
             })

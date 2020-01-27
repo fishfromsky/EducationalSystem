@@ -206,6 +206,7 @@
                              else if (res.message === 'teachersuccess'){
                                  document.cookie = "role=" + escape("teacher") + ";max-age="+(60*60)+";Path=" + escape("/");
                                  document.cookie = "status=" + escape("1") + ";max-age="+(60*60)+";Path=" + escape("/");
+                                 document.cookie = "number=" + escape(number) + ";max-age="+(60*60)+";Path=" + escape("/");
                                  window.location.href = '{% url 'T_Index' %}';
                              }
                              else {

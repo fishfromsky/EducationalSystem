@@ -7,6 +7,9 @@
 {% block icon_src1 %}/static/image/school1.png{% endblock %}
 {% block icon_src2 %}/static/image/teacher.png{% endblock %}
 {% block icon_src3 %}/static/image/table.png{% endblock %}
+{% block icon_src4 %}/static/image/home.png{% endblock %}
+{% block icon_src5 %}/static/image/class.png{% endblock %}
+{% block icon_src6 %}/static/image/select.png{% endblock %}
 
 {% block style %}
      <link rel="stylesheet" href="/static/index.css">
@@ -96,7 +99,6 @@
                         processData:false,
                         contentType:false,
                         success(res){
-                            console.log(res);
                             if (res.code === 0){
                                 let teachers = res.teacher_love;
                                 for (let i=0;i<teachers.length; i++){
@@ -309,7 +311,7 @@
                                 },
                                 series : [
                                     {
-                                        name: '开课数量',
+                                        name: '选课人数',
                                         type: 'pie',
                                         radius : '55%',
                                         center: ['50%', '60%'],

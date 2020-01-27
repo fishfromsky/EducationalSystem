@@ -16,6 +16,7 @@ def Login(request):
     context['school_list'] = school_list
     return render(request, './superuser/login.html', context)
 
+
 def Main(request):
     return render(request, './superuser/main.html', {})
 
@@ -784,7 +785,8 @@ def Delete_OptionLesson(request):
 
 
 def T_Index(request):
-    return render(request, './teacher/t_index.html', {})
+    context = {}
+    return render(request, './teacher/t_index.html', context)
 
 
 def S_Index(request):
@@ -819,13 +821,16 @@ def Ensure_status(request):
     if present_semester.objects.filter(dqxq='1').count():
         semester = present_semester.objects.get(dqxq='1').xq
         status = present_semester.objects.get(dqxq='1').xk
+        grade_status = present_semester.objects.get(dqxq='1').cjxq
         if status == '1':
             response['status'] = 1
+            response['grade'] = grade_status
             response['semester'] = semester
             response['message'] = 'success'
             response['code'] = 0
         else:
             response['status'] = 0
+            response['grade'] = grade_status
             response['semester'] = semester
             response['message'] = 'success'
             response['code'] = 0
@@ -855,6 +860,211 @@ def Change_present_semester(request):
     sem.dqxq = '1'
     sem_ori.save()
     sem.save()
-    response['message'] = 'suucess'
+    response['message'] = 'success'
+    response['code'] = 0
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Init_Teacher(request):
+    response = {}
+    semester_list = present_semester.objects.all()
+    semester = present_semester.objects.get(dqxq='1').xq
+    response['semester'] = semester
+    response['semester_list'] = json.loads(serializers.serialize('json', semester_list))
+    response['code'] = 0
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Get_Teacher_status(request):
+    response = {}
+    semester = request.POST.get('semester')
+    number = request.POST.get('number')
+    stu_number = Option_lesson.objects.filter(xq=semester).filter(gh_id=number).count()
+    lesson_number = Open_lesson.objects.filter(xq=semester).filter(gh_id=number).values('kh_id').distinct().count()
+    cursor = connection.cursor()
+    cursor.execute("select count(xh_id),mc from school_option_lesson tb1, school_stu_table tb2,school_school "
+                   "tb3 where tb1.xh_id=tb2.xh and tb2.yxh_id=tb3.yxh and gh_id='"+number+"' and xq='"+semester+"' group by yxh_id;")
+    stu_distribution = cursor.fetchall()
+    cursor.execute("select count(xh_id),xq from school_option_lesson where gh_id='"+number+"' group by xq")
+    semester_list = cursor.fetchall()
+    cursor.execute("select count(xh_id),jg from school_option_lesson tb1,school_stu_table tb2 where tb1.xh_id=tb2.xh "
+                   "and gh_id='"+number+"' and xq='"+semester+"' group by jg;")
+    location_list = cursor.fetchall()
+    semesters = Option_lesson.objects.all().values('xq').distinct()
+    response['stu_distribute'] = list(stu_distribution)
+    response['stu_number'] = stu_number
+    response['lesson_number'] = lesson_number
+    response['semester_list'] = semester_list
+    response['semesters'] = list(semesters)
+    response['locations'] = list(location_list)
+    response['code'] = 0
+    return JsonResponse(response)
+
+
+def t_Lesson(request, number, semester):
+    context = {}
+    lesson_list = Open_lesson.objects.filter(gh_id=number, xq=semester)
+    paginator = Paginator(lesson_list, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    return render(request, './teacher/lesson.html', context)
+
+
+def t_select_lesson(request, number, semester):
+    context = {}
+    cursor = connection.cursor()
+    cursor.execute("select xh,xm,kh,km,mc,xq from school_stu_table tb1,school_school tb2,school_lesson tb3,"
+                   "school_option_lesson tb4 where tb1.xh=tb4.xh_id and tb2.yxh=tb3.yxh_id and tb3.kh=tb4.kh_id and "
+                   "tb4.gh_id='"+number+"' and tb4.xq='"+semester+"';")
+    lesson_list = cursor.fetchall()
+    paginator = Paginator(list(lesson_list), 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+
+    return render(request, './teacher/select_lesson.html', context)
+
+
+def Grade(request, number, semester):
+    context = {}
+    cursor = connection.cursor()
+    cursor.execute("select distinct kh,km,sksj from school_option_lesson tb1,school_lesson tb2,school_open_lesson tb3 "
+                   "where tb1.kh_id=tb2.kh and tb1.kh_id=tb3.kh_id and tb1.gh_id and tb3.gh_id and tb1.xq=tb3.xq and "
+                   "tb1.gh_id='"+number+"' and tb1.xq='"+semester+"';")
+    lesson_list = cursor.fetchall()
+    paginator = Paginator(list(lesson_list), 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+
+    return render(request, './teacher/grade.html', context)
+
+
+def Register_Grade(request, number, semester, lesson):
+    context = {}
+    cursor = connection.cursor()
+    cursor.execute("select xh,xm,kh,km,pscj,kscj,zpcj from school_option_lesson tb1,school_stu_table tb2,school_lesson"
+                   " tb3 where tb1.xh_id=tb2.xh and "
+                   "tb1.kh_id=tb3.kh and gh_id='"+number+"' and xq='"+semester+"' and kh_id='"+lesson+"';")
+    lesson_list = cursor.fetchall()
+    paginator = Paginator(list(lesson_list), 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    return render(request, './teacher/grade_register.html', context)
+
+
+@require_http_methods(['POST'])
+def Save_grade(request):
+    response = {}
+    stu_number = request.POST.get('stu_num')
+    lesson_number = request.POST.get('lesson_num')
+    tea_number = request.POST.get('tea_num')
+    grade = Option_lesson.objects.get(xh_id=Stu_table(xh=stu_number),
+                                      kh_id=Lesson(kh=lesson_number), gh_id=Teacher(gh=tea_number))
+    grade.pscj = request.POST.get('pscj')
+    grade.kscj = request.POST.get('kscj')
+    grade.save()
+    response['message'] = 'success'
+    response['code'] = 0
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Get_Percent(request):
+    response = {}
+    lesson_number = request.POST.get('lesson')
+    lesson = Lesson.objects.get(kh=lesson_number)
+    rule_ps = lesson.rule_ps
+    rule_ks = lesson.rule_ks
+    response['message'] = 'success'
+    response['code'] = 0
+    response['rule_ps'] = rule_ps
+    response['rule_ks'] = rule_ks
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Start_Grade_register(request):
+    response = {}
+    grade = present_semester.objects.get(dqxq='1')
+    grade.cjxq = '1'
+    grade.save()
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Stop_Grade_register(request):
+    response = {}
+    grade = present_semester.objects.get(dqxq='1')
+    grade.cjxq = '0'
+    grade.save()
+    response['message'] = 'success'
     response['code'] = 0
     return JsonResponse(response)
