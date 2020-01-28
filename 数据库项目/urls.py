@@ -41,5 +41,6 @@ urlpatterns = [
     path('t_lesson/<str:number>/<str:semester>', views.t_Lesson, name="t_Lesson"),
     path('t_select/<str:number>/<str:semester>', views.t_select_lesson, name='t_Select_Lesson'),
     path('t_register/<str:number>/<str:semester>', views.Grade, name="Grade"),
-    path('t_grade/<str:number>/<str:semester>/<str:lesson>', views.Register_Grade, name="RegisterGrade")
+    path('t_grade/<str:number>/<str:semester>/<str:lesson>', views.Register_Grade, name="RegisterGrade"),
+    path('t_grade_check/<str:number>/<str:semester>/<str:lesson>', views.Check_grade, name="Check_grade")
 ]

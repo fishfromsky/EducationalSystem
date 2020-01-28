@@ -58,5 +58,5 @@ class Option_lessonAdmin(admin.ModelAdmin):
 
 @admin.register(present_semester)
 class present_semesterAdmin(admin.ModelAdmin):
-    list_display = ('xq', 'xk', 'dqxq', 'cjxq')
+    list_display = ('xq', 'xk', 'dqxq', 'cjxq_ps', 'cjxq_ks')
     ordering = ('-id',)

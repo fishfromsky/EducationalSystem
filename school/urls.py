@@ -33,6 +33,9 @@ urlpatterns = [
     path('teacher_index/', views.Get_Teacher_status, name="Teacher_status"),
     path('save_grade/', views.Save_grade, name="Save_grade"),
     path('get_percent/', views.Get_Percent, name='Get_Percent'),
-    path('start_grade_register/', views.Start_Grade_register, name="StartGrade"),
-    path('stop_grade_register/', views.Stop_Grade_register, name="StopGrade")
+    path('start_grade_register/', views.Start_Grade_register_PS, name="StartGradePs"),
+    path('stop_grade_register/', views.Stop_Grade_register_PS, name="StopGradePs"),
+    path('judge_grade_register/', views.Judge_grade_register, name="JudgeGrade"),
+    path('start_grade_register_exam/', views.Start_Grade_Register_KS, name="StartGradeKs"),
+    path('stop_grade_register_exam/', views.Stop_Grade_Register_KS, name="StopGradeKs")
 ]

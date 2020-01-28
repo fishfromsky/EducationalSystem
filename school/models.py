@@ -108,6 +108,7 @@ class present_semester(models.Model):
     xq = models.CharField(max_length=50)
     xk = models.CharField(max_length=5)
     dqxq = models.CharField(max_length=5)
-    cjxq = models.CharField(max_length=5, default='0')
+    cjxq_ps = models.CharField(max_length=5, default='0')
+    cjxq_ks = models.CharField(max_length=5, default='0')
 
 

@@ -821,16 +821,19 @@ def Ensure_status(request):
     if present_semester.objects.filter(dqxq='1').count():
         semester = present_semester.objects.get(dqxq='1').xq
         status = present_semester.objects.get(dqxq='1').xk
-        grade_status = present_semester.objects.get(dqxq='1').cjxq
+        grade_status = present_semester.objects.get(dqxq='1').cjxq_ps
+        grade_status_ks = present_semester.objects.get(dqxq='1').cjxq_ks
         if status == '1':
             response['status'] = 1
             response['grade'] = grade_status
+            response['grade_ks'] = grade_status_ks
             response['semester'] = semester
             response['message'] = 'success'
             response['code'] = 0
         else:
             response['status'] = 0
             response['grade'] = grade_status
+            response['grade_ks'] = grade_status_ks
             response['semester'] = semester
             response['message'] = 'success'
             response['code'] = 0
@@ -1018,6 +1021,35 @@ def Register_Grade(request, number, semester, lesson):
     return render(request, './teacher/grade_register.html', context)
 
 
+def Check_grade(request, number, semester, lesson):
+    context = {}
+    cursor = connection.cursor()
+    cursor.execute("select xh,xm,mc,pscj,kscj,zpcj from school_stu_table tb1,school_school tb2,school_option_lesson tb3"
+                   " where tb1.xh=tb3.xh_id and tb2.yxh=tb1.yxh_id and tb3.gh_id='"+number+"' and tb3.xq='"+semester+"'"
+                    " and kh_id='"+lesson+"';")
+    lesson_list = cursor.fetchall()
+    paginator = Paginator(list(lesson_list), 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    return render(request, './teacher/grade_check.html', context)
+
+
 @require_http_methods(['POST'])
 def Save_grade(request):
     response = {}
@@ -1049,10 +1081,10 @@ def Get_Percent(request):
 
 
 @require_http_methods(['POST'])
-def Start_Grade_register(request):
+def Start_Grade_register_PS(request):
     response = {}
     grade = present_semester.objects.get(dqxq='1')
-    grade.cjxq = '1'
+    grade.cjxq_ps = '1'
     grade.save()
     response['code'] = 0
     response['message'] = 'success'
@@ -1060,11 +1092,50 @@ def Start_Grade_register(request):
 
 
 @require_http_methods(['POST'])
-def Stop_Grade_register(request):
+def Stop_Grade_register_PS(request):
     response = {}
     grade = present_semester.objects.get(dqxq='1')
-    grade.cjxq = '0'
+    grade.cjxq_ps = '0'
     grade.save()
     response['message'] = 'success'
     response['code'] = 0
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Judge_grade_register(request):
+    response = {}
+    grade = present_semester.objects.get(dqxq='1')
+    if grade.cjxq_ps == '1':
+        response['result'] = 1
+    else:
+        response['result'] = 0
+    if grade.cjxq_ks == '1':
+        response['result_ks'] = 1
+    else:
+        response['result_ks'] = 0
+    response['message'] = 'success'
+    response['code'] = 0
+    return JsonResponse(response)
+
+
+@require_http_methods({'POST'})
+def Start_Grade_Register_KS(request):
+    response = {}
+    grade = present_semester.objects.get(dqxq='1')
+    grade.cjxq_ks = '1'
+    grade.save()
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
+
+
+@require_http_methods({'POST'})
+def Stop_Grade_Register_KS(request):
+    response = {}
+    grade = present_semester.objects.get(dqxq='1')
+    grade.cjxq_ks = '0'
+    grade.save()
+    response['code'] = 0
+    response['message'] = 'success'
     return JsonResponse(response)

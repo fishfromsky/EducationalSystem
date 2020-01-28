@@ -58,7 +58,7 @@
                     <div class="panel-body">
                         <ul class="nav nav-pills nav-stacked">
                             <li role="presentation" onclick="Transfer_main()" class="{% block main_active %}{% endblock %}">
-                                <a href="#">主界面</a>
+                                <a href="{% url 'T_Index' %}">主界面</a>
                             </li>
                             <li role="presentation" onclick="Transfer_lesson()" class="{% block class_info %}{% endblock %}">
                                 <a href="#">本学期授课信息</a>
@@ -67,7 +67,7 @@
                                 <a href="#">查看选课信息</a>
                             </li>
                             <li role="presentation" onclick="Transfer_grade()" class="{% block register_grade %}{% endblock %}">
-                               <a href="#">登记学生成绩</a>
+                               <a href="#">学生成绩</a>
                             </li>
                         </ul>
                     </div>
@@ -97,21 +97,24 @@
     </div>
     <script>
         function Transfer_main() {
-            clearCookie('semester')
+            $.cookie('semester',"")
         }
     </script>
     <script>
         function Transfer_grade() {
+            $.cookie('semester',"");
             let teacher_number = getCookie('number');
             let teacher_semester = document.getElementById('semester').innerText;
             window.location.href = "http://localhost:8000/t_register/"+teacher_number+'/'+teacher_semester;
         }
         function Transfer_lesson() {
+            $.cookie('semester',"");
             let teacher_number = getCookie('number');
             let semester_number = document.getElementById('semester').innerText;
             window.location.href = "http://localhost:8000/t_lesson/"+teacher_number+'/'+semester_number;
          }
          function Transfer_select_lesson() {
+             $.cookie('semester',"");
              let teacher_number = getCookie('number');
              let semester_number = document.getElementById('semester').innerText;
              window.location.href = "http://localhost:8000/t_select/"+teacher_number+'/'+semester_number;

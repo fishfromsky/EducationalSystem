@@ -23,6 +23,7 @@
             </tr>
         {% endfor %}
     </table>
+    {% csrf_token %}
     <nav aria-label="Page navigation">
         <ul class="pagination" style="margin-left: 42%">
             <li>
@@ -57,17 +58,49 @@
 {% block script %}
     <script>
         toastr.options.positionClass = 'toast-top-center';
+        let status_ps = 0;   //默认不允许平时成绩登记
+        let status_ks = 0;   //默认不允许考试成绩登记
         function Register(lesson){
             let semester = $("#semester").text();
             let semester_current = $("#semester_change").val();
-            if (semester !== semester_current){
+            if (semester !== semester_current) {
                 toastr.error('未到登记成绩时间!')
             }
             else{
-                let number = getCookie('number');
-                let semester = document.getElementById('semester').innerText;
-                window.location.href = 'http://localhost:8000/t_grade/'+number+'/'+semester+'/'+ lesson;
+                let data_obj = new FormData();
+                data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+                $.ajax({
+                    url:'{% url 'JudgeGrade' %}',
+                    type:'post',
+                    data:data_obj,
+                    dataType:'json',
+                    processData:false,
+                    contentType:false,
+                    success(res){
+                        status_ps = res.result;
+                        status_ks = res.result_ks;
+                        if (status_ks || status_ps){
+                            let semester = $("#semester").text();
+                            let number = getCookie('number');
+                            window.location.href = 'http://localhost:8000/t_grade/'+number+'/'+semester+'/'+lesson;
+                        }
+                        else{
+                            toastr.error("未到成绩登记时间")
+                        }
+                    },
+                    fail() {
+                        toastr.error('接口故障')
+                    },
+                    error(){
+                        toastr.error('接口故障')
+                    }
+                });
             }
+        }
+        function Check(lesson){
+            let semester = $("#semester_change").val();
+            let number = getCookie('number');
+            window.location.href = 'http://localhost:8000/t_grade_check/'+number+'/'+semester+'/'+lesson;
         }
         window.onpageshow = function(){
             var semester = "";
