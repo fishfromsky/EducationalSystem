@@ -53,20 +53,17 @@
 {% block script %}
     <script>
         window.onpageshow = function () {
-            var semester = "";
             setTimeout(function () {
-                if (getCookie('semester') !== ""){
-                    semester = unescape(getCookie('semester'))
+                let semes = sessionStorage.getItem('semester');
+                if (semes === null){
+                    semes = $("#semester").text();
                 }
-                else{
-                    semester = $("#semester").text();
-                }
-                $("#semester_change").val(semester)
+                $("#semester_change").val(semes);
             },100)
         };
         $("#edit_semester_confirm").click(function () {
             var cookie_semester = $("#semester_change").val();
-            document.cookie = "semester="+escape(cookie_semester) + ";max-age="+(60*60);
+            sessionStorage.setItem('semester', cookie_semester);
             window.location.href = "http://localhost:8000/t_lesson/"+getCookie('number')+'/'+cookie_semester;
         })
     </script>

@@ -42,5 +42,10 @@ urlpatterns = [
     path('t_select/<str:number>/<str:semester>', views.t_select_lesson, name='t_Select_Lesson'),
     path('t_register/<str:number>/<str:semester>', views.Grade, name="Grade"),
     path('t_grade/<str:number>/<str:semester>/<str:lesson>', views.Register_Grade, name="RegisterGrade"),
-    path('t_grade_check/<str:number>/<str:semester>/<str:lesson>', views.Check_grade, name="Check_grade")
+    path('t_grade_check/<str:number>/<str:semester>/<str:lesson>', views.Check_grade, name="Check_grade"),
+    path('t_select/<str:number>/<str:semester>/<str:content>', views.Select_Lesson_Search, name="Select_Search"),
+    path('t_grade_check/<str:number>/<str:semester>/<str:lesson>/<str:content>', views.Check_Grade_search,
+         name='Check_search'),
+    path('t_grade/<str:number>/<str:semester>/<str:lesson>/<str:content>', views.Register_Grade_search,
+         name="RegisterGradeSearch")
 ]

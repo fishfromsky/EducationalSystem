@@ -7,16 +7,16 @@
     <link rel="stylesheet" href="/static/boostrap-3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/teacher/base.css">
     <link rel="stylesheet" href="/static/main.css">
-    <script type="text/javascript" src="/static/getcookie.js"></script>
     <script type="text/javascript" src="/static/jquery1.12.4.min.js"></script>
     <script type="text/javascript" src="/static/jquery.cookie.js"></script>
     <script type = 'text/javascript' src="/static/boostrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/bootstrap-switch.min.js"></script>
+    <script type="text/javascript" src="/static/getcookie.js"></script>
     <script type="text/javascript" src="/static/echarts.min.js"></script>
     <script type="text/javascript" src="/static/toastr.js"></script>
     <link rel="stylesheet" href="/static/toastr.css">
-    {% block style %}{% endblock %}
 </head>
+{% block style %}{% endblock %}
 <style>
     #current_semester{
         font-size: 14px;
@@ -97,24 +97,26 @@
     </div>
     <script>
         function Transfer_main() {
-            $.cookie('semester',"")
+            sessionStorage.removeItem('semester');
+            sessionStorage.removeItem('lesson')
         }
-    </script>
-    <script>
         function Transfer_grade() {
-            $.cookie('semester',"");
+            sessionStorage.removeItem('semester');
+            sessionStorage.removeItem('lesson');
             let teacher_number = getCookie('number');
             let teacher_semester = document.getElementById('semester').innerText;
             window.location.href = "http://localhost:8000/t_register/"+teacher_number+'/'+teacher_semester;
         }
         function Transfer_lesson() {
-            $.cookie('semester',"");
+            sessionStorage.removeItem('semester');
+            sessionStorage.removeItem('lesson');
             let teacher_number = getCookie('number');
             let semester_number = document.getElementById('semester').innerText;
             window.location.href = "http://localhost:8000/t_lesson/"+teacher_number+'/'+semester_number;
          }
          function Transfer_select_lesson() {
-             $.cookie('semester',"");
+             sessionStorage.removeItem('semester');
+             sessionStorage.removeItem('lesson');
              let teacher_number = getCookie('number');
              let semester_number = document.getElementById('semester').innerText;
              window.location.href = "http://localhost:8000/t_select/"+teacher_number+'/'+semester_number;
@@ -122,10 +124,13 @@
     </script>
     <script>
         function Logout() {
+            sessionStorage.removeItem('lesson');
+            sessionStorage.removeItem('status_ps');
+            sessionStorage.removeItem('status_ks');
+            sessionStorage.removeItem('semester');
             document.cookie = "role="+escape("")+";max-age="+(-1)+";Path="+escape('/');
             document.cookie = "status="+escape("")+";max-age="+(-1)+";Path="+escape('/');
             document.cookie = "number="+escape("")+";max-age="+(-1)+";Path="+escape('/');
-            document.cookie = "semester="+escape("")+";max-age="+(-1)+";Path="+escape('/');
             location.reload();
         }
     </script>
@@ -157,7 +162,7 @@
                     }
                 })
             }
-        }
+        };
     </script>
     {% block modal %}{% endblock %}
     {% block script %}{% endblock %}

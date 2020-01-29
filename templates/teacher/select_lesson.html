@@ -11,8 +11,8 @@
             <th>姓名</th>
             <th>课号</th>
             <th>课名</th>
-            <th>学院</th>
-            <th>学期</th>
+            <th>开课学院</th>
+            <th>上课时间</th>
         </tr>
         {% for lesson in page_of_list %}
             <tr>
@@ -56,24 +56,52 @@
     </nav>
 {% endblock %}
 
+
+{% block panel %}
+    <div class="panel panel-success">
+        <div class="panel-heading" style="text-align: center">
+            <span>关键字搜索</span>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" id="search_input" class="form-control" placeholder="请输入搜索关键字">
+                </div>
+                <div class="col-md-4">
+                    <button type="button" id="search_button" style="width: 70px" class="btn btn-success">搜索</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block script %}
     <script>
+        toastr.options.positionClass = "toast-top-center";
         window.onpageshow = function(){
-            var semester = "";
             setTimeout(function () {
-                if (getCookie('semester') !== '' ){
-                    semester = unescape(getCookie('semester'))
+                let semes = sessionStorage.getItem('semester');
+                if (semes === null){
+                    semes = $("#semester").text();
                 }
-                else{
-                    semester = $("#semester").text();
-                }
-                $("#semester_change").val(semester)
+                $("#semester_change").val(semes);
             },100)
         };
         $("#edit_semester_confirm").click(function () {
             var cookie_semester = $("#semester_change").val();
-            document.cookie = "semester="+escape(cookie_semester)+";max-age="+(60*60);
+            sessionStorage.setItem('semester',cookie_semester);
             window.location.href = 'http://localhost:8000/t_select/'+getCookie('number')+'/'+cookie_semester;
+        });
+        $("#search_button").click(function () {
+            let content = $("#search_input").val();
+            let semester = $("#semester_change").val();
+            if (content === ''){
+                toastr.error('请输入搜索内容')
+            }
+            else{
+                sessionStorage.setItem('semester', $("#semester_change").val());
+                location.href = 'http://localhost:8000/t_select/'+getCookie('number')+'/'+semester+'/'+content;
+            }
         })
     </script>
 {% endblock %}

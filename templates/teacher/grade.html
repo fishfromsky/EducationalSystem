@@ -63,6 +63,7 @@
         function Register(lesson){
             let semester = $("#semester").text();
             let semester_current = $("#semester_change").val();
+            sessionStorage.setItem('lesson', lesson);
             if (semester !== semester_current) {
                 toastr.error('未到登记成绩时间!')
             }
@@ -82,6 +83,8 @@
                         if (status_ks || status_ps){
                             let semester = $("#semester").text();
                             let number = getCookie('number');
+                            sessionStorage.setItem('status_ps', status_ps);
+                            sessionStorage.setItem('status_ks', status_ks);
                             window.location.href = 'http://localhost:8000/t_grade/'+number+'/'+semester+'/'+lesson;
                         }
                         else{
@@ -100,23 +103,22 @@
         function Check(lesson){
             let semester = $("#semester_change").val();
             let number = getCookie('number');
+            sessionStorage.setItem('semester', semester);
+            sessionStorage.setItem('lesson', lesson);
             window.location.href = 'http://localhost:8000/t_grade_check/'+number+'/'+semester+'/'+lesson;
         }
         window.onpageshow = function(){
-            var semester = "";
             setTimeout(function () {
-                if (getCookie('semester') !== '' ){
-                    semester = unescape(getCookie('semester'))
+                let semes = sessionStorage.getItem('semester');
+                if (semes === null){
+                    semes = $("#semester").text();
                 }
-                else{
-                    semester = $("#semester").text();
-                }
-                $("#semester_change").val(semester)
+                $("#semester_change").val(semes);
             },100)
         };
         $("#edit_semester_confirm").click(function () {
             var cookie_semester = $("#semester_change").val();
-            document.cookie = 'semester='+escape(cookie_semester)+';max-age='+(60*60);
+            sessionStorage.setItem('semester', cookie_semester);
             window.location.href = "http://localhost:8000/t_register/"+getCookie('number')+'/'+cookie_semester;
         })
     </script>

@@ -1,18 +1,36 @@
 {% extends './base.html' %}
 
-{% block title %}查看学生成绩{% endblock %}
+{% block title %}选课主页面{% endblock %}
 
-{% block register_grade %}active{% endblock %}
+{% block select_class %}active{% endblock %}
+
+{% block panel %}
+    <div class="panel panel-success">
+        <div class="panel-heading" style="text-align: center">
+            <span>关键字搜索</span>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" id="search_input" class="form-control" placeholder="请输入搜索关键字">
+                </div>
+                <div class="col-md-4">
+                    <button type="button" id="search_button" style="width: 70px" class="btn btn-success">搜索</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
 {% block content %}
     <table class="table table-striped">
         <tr>
             <th>学号</th>
             <th>姓名</th>
-            <th>学院</th>
-            <th>平时成绩</th>
-            <th>考试成绩</th>
-            <th>总评成绩</th>
+            <th>课号</th>
+            <th>课名</th>
+            <th>开课学院</th>
+            <th>上课时间</th>
         </tr>
         {% for lesson in page_of_list %}
             <tr>
@@ -56,26 +74,9 @@
     </nav>
 {% endblock %}
 
-{% block panel %}
-    <div class="panel panel-success">
-        <div class="panel-heading" style="text-align: center">
-            <span>关键字搜索</span>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-8">
-                    <input type="text" id="search_input" class="form-control" placeholder="请输入搜索关键字">
-                </div>
-                <div class="col-md-4">
-                    <button type="button" id="search_button" style="width: 70px" class="btn btn-success">搜索</button>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-
 {% block script %}
     <script>
+        toastr.options.positionClass = "toast-top-center";
         window.onpageshow = function () {
             setTimeout(function () {
                 let semes = sessionStorage.getItem('semester');
@@ -85,24 +86,21 @@
                 $("#semester_change").val(semes);
             },100)
         };
-        $("#edit_semester_confirm").click(function () {
-            let semester = $("#semester_change").val();
-            let number = getCookie('number');
-            let lesson = sessionStorage.getItem('lesson');
-            sessionStorage.setItem('semester', semester);
-            window.location.href = 'http://localhost:8000/t_grade_check/'+number+'/'+semester+'/'+lesson;
-        });
         $("#search_button").click(function () {
             let content = $("#search_input").val();
             let semester = $("#semester_change").val();
-            let lesson = sessionStorage.getItem('lesson');
             if (content === ''){
                 toastr.error('请输入搜索内容')
             }
             else{
                 sessionStorage.setItem('semester', semester);
-                location.href = 'http://localhost:8000/t_grade_check/'+getCookie('number')+'/'+semester+'/'+lesson+'/'+content;
+                location.href = 'http://localhost:8000/t_select/'+getCookie('number')+'/'+semester+'/'+content;
             }
-        })
+        });
+        $("#edit_semester_confirm").click(function () {
+            var cookie_semester = $("#semester_change").val();
+            sessionStorage.setItem('semester',cookie_semester);
+            window.location.href = 'http://localhost:8000/t_select/'+getCookie('number')+'/'+cookie_semester;
+        });
     </script>
 {% endblock %}

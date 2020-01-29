@@ -882,11 +882,15 @@ def Init_Teacher(request):
 @require_http_methods(['POST'])
 def Get_Teacher_status(request):
     response = {}
+    cursor = connection.cursor()
     semester = request.POST.get('semester')
     number = request.POST.get('number')
-    stu_number = Option_lesson.objects.filter(xq=semester).filter(gh_id=number).count()
-    lesson_number = Open_lesson.objects.filter(xq=semester).filter(gh_id=number).values('kh_id').distinct().count()
-    cursor = connection.cursor()
+    cursor.execute("select count(xh_id) from school_option_lesson tb1,school_open_lesson tb2 where"
+                                " tb2.gh_id=tb1.gh_id and tb2.kh_id=tb1.kh_id and tb2.xq=tb1.xq and tb1.gh_id="
+                                "'"+number+"' and tb1.xq='"+semester+"';")
+    stu_number = list(cursor.fetchall())[0][0]
+    lesson_number = Open_lesson.objects.filter(xq=semester).filter(gh_id=number).values('kh_id').count()
+
     cursor.execute("select count(xh_id),mc from school_option_lesson tb1, school_stu_table tb2,school_school "
                    "tb3 where tb1.xh_id=tb2.xh and tb2.yxh_id=tb3.yxh and gh_id='"+number+"' and xq='"+semester+"' group by yxh_id;")
     stu_distribution = cursor.fetchall()
@@ -935,9 +939,10 @@ def t_Lesson(request, number, semester):
 def t_select_lesson(request, number, semester):
     context = {}
     cursor = connection.cursor()
-    cursor.execute("select xh,xm,kh,km,mc,xq from school_stu_table tb1,school_school tb2,school_lesson tb3,"
-                   "school_option_lesson tb4 where tb1.xh=tb4.xh_id and tb2.yxh=tb3.yxh_id and tb3.kh=tb4.kh_id and "
-                   "tb4.gh_id='"+number+"' and tb4.xq='"+semester+"';")
+    cursor.execute("select xh,xm,kh,km,mc,sksj from school_option_lesson tb1,school_open_lesson tb2,school_lesson tb3,"
+                   "school_school tb4,school_stu_table tb5 where tb5.xh=tb1.xh_id and tb4.yxh=tb3.yxh_id and tb3.kh"
+                   "=tb1.kh_id and tb2.kh_id=tb1.kh_id and tb2.gh_id=tb1.gh_id and tb2.xq=tb1.xq and tb1.gh_id='"+number
+                   +"' and tb1.xq='"+semester+"';")
     lesson_list = cursor.fetchall()
     paginator = Paginator(list(lesson_list), 20)
     page_num = request.GET.get("page", 1)
@@ -965,9 +970,8 @@ def t_select_lesson(request, number, semester):
 def Grade(request, number, semester):
     context = {}
     cursor = connection.cursor()
-    cursor.execute("select distinct kh,km,sksj from school_option_lesson tb1,school_lesson tb2,school_open_lesson tb3 "
-                   "where tb1.kh_id=tb2.kh and tb1.kh_id=tb3.kh_id and tb1.gh_id and tb3.gh_id and tb1.xq=tb3.xq and "
-                   "tb1.gh_id='"+number+"' and tb1.xq='"+semester+"';")
+    cursor.execute("select kh,km,sksj from school_open_lesson tb1,school_lesson tb2 where tb1.kh_id=tb2.kh and"
+                   " tb1.gh_id='"+number+"' and tb1.xq='"+semester+"';")
     lesson_list = cursor.fetchall()
     paginator = Paginator(list(lesson_list), 20)
     page_num = request.GET.get("page", 1)
@@ -1060,6 +1064,7 @@ def Save_grade(request):
                                       kh_id=Lesson(kh=lesson_number), gh_id=Teacher(gh=tea_number))
     grade.pscj = request.POST.get('pscj')
     grade.kscj = request.POST.get('kscj')
+    grade.zpcj = request.POST.get('zpcj')
     grade.save()
     response['message'] = 'success'
     response['code'] = 0
@@ -1139,3 +1144,93 @@ def Stop_Grade_Register_KS(request):
     response['code'] = 0
     response['message'] = 'success'
     return JsonResponse(response)
+
+
+def Select_Lesson_Search(request, number, semester, content):
+    context = {}
+    cursor = connection.cursor()
+    cursor.execute("select xh,xm,kh,km,mc,sksj from school_option_lesson tb1,school_open_lesson tb2,school_lesson tb3,"
+                   "school_school tb4,school_stu_table tb5 where tb5.xh=tb1.xh_id and tb4.yxh=tb3.yxh_id and tb3.kh="
+                   "tb1.kh_id and tb2.kh_id=tb1.kh_id and tb2.gh_id=tb1.gh_id and tb2.xq=tb1.xq and tb1.gh_id='"+number
+                   +"' and tb1.xq='"+semester+"' and (xm like '"+content+"%' or xm like '%"+content+"' or xm like '%"+content+"%');")
+    lesson_list = cursor.fetchall()
+    paginator = Paginator(list(lesson_list), 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+
+    return render(request, './teacher/select_search_lesson.html', context)
+
+
+def Check_Grade_search(request,number,semester,lesson,content):
+    context = {}
+    cursor = connection.cursor()
+    cursor.execute("select xh,xm,mc,pscj,kscj,zpcj from school_stu_table tb1,school_school tb2,school_option_lesson tb3"
+                   " where tb1.xh=tb3.xh_id and tb2.yxh=tb1.yxh_id and tb3.gh_id='"+number+"' and tb3.xq='"+semester+"'"
+                    " and kh_id='"+lesson+"' and ( xm like '%"+content+"' or xm like '"+content+"%' or xm like '%"+content+"%');")
+    lesson_list = cursor.fetchall()
+    paginator = Paginator(list(lesson_list), 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    return render(request, './teacher/grade_check_search.html', context)
+
+
+def Register_Grade_search(request, number, semester, lesson, content):
+    context = {}
+    cursor = connection.cursor()
+    cursor.execute("select xh,xm,kh,km,pscj,kscj,zpcj from school_option_lesson tb1,school_stu_table tb2,school_lesson"
+                   " tb3 where tb1.xh_id=tb2.xh and "
+                   "tb1.kh_id=tb3.kh and gh_id='"+number+"' and xq='"+semester+"' and kh_id='"+lesson+"' and ( xm like"
+                  " '%"+content+"' or xm like '"+content+"%' or xm like '%"+content+"%');")
+    lesson_list = cursor.fetchall()
+    paginator = Paginator(list(lesson_list), 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    return render(request, './teacher/grade_register_search.html', context)

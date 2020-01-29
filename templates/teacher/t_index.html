@@ -91,16 +91,11 @@
     </script>
     <script>
         window.onpageshow = function () {
-            let semes = "";
-            setTimeout(function () {
-                if (getCookie('semester') !== '' ){
-                    semes = unescape(getCookie('semester'))
-                }
-                else{
-                    semes = $("#semester").text();
-                }
-                $("#semester_change").val(semes)
-            },100);
+            let semes = sessionStorage.getItem('semester');
+            if (semes === null){
+                semes = $("#semester").text();
+            }
+            $("#semester_change").val(semes);
             $("#number_count").text('0');
             $("#number_count1").text('0');
             var stu_distribute_count = [];
@@ -108,8 +103,8 @@
             var number_total = [];
             var semester = "";
             setTimeout(function () {
-                if (getCookie('semester') !== ""){
-                    semester = unescape(getCookie('semester'))
+                if (sessionStorage.getItem('semester') !== null){
+                    semester = sessionStorage.getItem('semester')
                 }
                 else{
                     semester = document.getElementById('semester').innerText;
@@ -279,7 +274,7 @@
     <script>
         $("#edit_semester_confirm").click(function () {
             var cookie_semester = $("#semester_change").val();
-            document.cookie = "semester="+escape(cookie_semester) + ";max-age="+(60*60);
+            sessionStorage.setItem('semester', cookie_semester);
             location.reload();
         })
     </script>
