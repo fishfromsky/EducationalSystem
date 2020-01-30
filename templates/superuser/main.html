@@ -72,6 +72,8 @@
         var school_data = [];
         var school_count_data = [];
         window.onpageshow = function () {
+            $("#search-input").attr('disabled','disabled');
+            $("#search_btn").attr('disabled','disabled');
             var role = getCookie('role');
             var status = getCookie('status');
             if (role !== 'superuser' || status === ""){

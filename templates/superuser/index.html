@@ -3,11 +3,6 @@
 主页面
 {% endblock %}
 
-{% block style %}
-    <link rel="stylesheet" href="/static/index.css">
-    <script type="text/javascript" src="/static/toastr.js"></script>
-    <link rel="stylesheet" href="/static/toastr.css">
-{% endblock %}
 
 {% block active_stu %}
     active
@@ -166,6 +161,12 @@
          toastr.options.positionClass = "toast-top-center";
          $("#addstudent").click(function () {
             $("#MyModal").modal();
+         });
+         $("#search_btn").click(function () {
+             let content = $("#search-input").val();
+             let url =  "{% url 'IndexSearch' 'content' %}";
+             url = url.replace(/content/, content);
+             window.location.href = url
          });
          $("#save_student").click(function () {
              var number = $("#number").val();

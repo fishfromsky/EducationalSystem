@@ -136,6 +136,12 @@
  
 {% block script %}
     <script>
+        $("#search_btn").click(function () {
+             let content = $("#search-input").val();
+             let url = '{% url 'LessonSearch' 'content' %}';
+             url = url.replace(/content/,content);
+             window.location.href = url;
+         });
         $("#addlesson").click(function () {
             $("#MyLesson").modal();
         })

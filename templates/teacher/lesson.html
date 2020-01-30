@@ -62,9 +62,12 @@
             },100)
         };
         $("#edit_semester_confirm").click(function () {
-            var cookie_semester = $("#semester_change").val();
+            let cookie_semester = $("#semester_change").val();
             sessionStorage.setItem('semester', cookie_semester);
-            window.location.href = "http://localhost:8000/t_lesson/"+getCookie('number')+'/'+cookie_semester;
+            let number = getCookie('number');
+            let url = '{% url 't_Lesson' 'number' 'semester' %}';
+            url = url.replace(/number/,number).replace(/semester/,cookie_semester);
+            window.location.href = url;
         })
     </script>
 {% endblock %}

@@ -242,7 +242,11 @@
             }
             else{
                 sessionStorage.setItem('semester', semester);
-                location.href = 'http://localhost:8000/t_grade/'+getCookie('number')+'/'+semester+'/'+lesson+'/'+content;
+                let number = getCookie('number');
+                let url = '{% url 'RegisterGradeSearch' 'number' 'semester' 'lesson' 'content' %}';
+                url = url.replace(/number/,number).replace(/semester/,semester).replace(/lesson/,lesson)
+                    .replace(/content/,content)
+                window.location.href = url;
             }
         })
     </script>

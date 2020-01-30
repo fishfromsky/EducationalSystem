@@ -90,7 +90,10 @@
         $("#edit_semester_confirm").click(function () {
             var cookie_semester = $("#semester_change").val();
             sessionStorage.setItem('semester',cookie_semester);
-            window.location.href = 'http://localhost:8000/t_select/'+getCookie('number')+'/'+cookie_semester;
+            let number = getCookie('number');
+            let url = '{% url 't_Select_Lesson' 'number' 'semester' %}';
+            url = url.replace(/number/,number).replace(/semester/,cookie_semester);
+            window.location.href = url;
         });
         $("#search_button").click(function () {
             let content = $("#search_input").val();
@@ -100,7 +103,9 @@
             }
             else{
                 sessionStorage.setItem('semester', $("#semester_change").val());
-                location.href = 'http://localhost:8000/t_select/'+getCookie('number')+'/'+semester+'/'+content;
+                let url = '{% url 'Select_Search' 'number' 'semester' 'content' %}';
+                url = url.replace(/number/,getCookie('number')).replace(/semester/,semester).replace(/content/,content);
+                window.location.href = url;
             }
         })
     </script>

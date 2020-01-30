@@ -85,7 +85,9 @@
                             let number = getCookie('number');
                             sessionStorage.setItem('status_ps', status_ps);
                             sessionStorage.setItem('status_ks', status_ks);
-                            window.location.href = 'http://localhost:8000/t_grade/'+number+'/'+semester+'/'+lesson;
+                            let url = '{% url 'RegisterGrade' 'number' 'semester' 'lesson' %}';
+                            url = url.replace(/number/,number).replace(/semester/,semester).replace(/lesson/,lesson);
+                            window.location.href = url;
                         }
                         else{
                             toastr.error("未到成绩登记时间")
@@ -105,7 +107,9 @@
             let number = getCookie('number');
             sessionStorage.setItem('semester', semester);
             sessionStorage.setItem('lesson', lesson);
-            window.location.href = 'http://localhost:8000/t_grade_check/'+number+'/'+semester+'/'+lesson;
+            let url = '{% url 'Check_grade' 'number' 'semester' 'lesson' %}';
+            url = url.replace(/number/,number).replace(/semester/,semester).replace(/lesson/,lesson);
+            window.location.href = url;
         }
         window.onpageshow = function(){
             setTimeout(function () {
@@ -117,9 +121,12 @@
             },100)
         };
         $("#edit_semester_confirm").click(function () {
-            var cookie_semester = $("#semester_change").val();
+            let cookie_semester = $("#semester_change").val();
             sessionStorage.setItem('semester', cookie_semester);
-            window.location.href = "http://localhost:8000/t_register/"+getCookie('number')+'/'+cookie_semester;
+            let number = getCookie('number');
+            let url = '{% url 'Grade' 'number' 'semester' %}';
+            url = url.replace(/number/,number).replace('semester',cookie_semester);
+            window.location.href = url;
         })
     </script>
 {% endblock %}

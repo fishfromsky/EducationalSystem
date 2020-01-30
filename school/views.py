@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods
 import json
 from django.core import serializers
 from django.db import connection
+from django.db.models import Q
 
 
 def Login(request):
@@ -25,8 +26,8 @@ def Main(request):
 def Main_Get(request):
     response = {}
     semester = request.POST.get('semester')
-    stu_count = Option_lesson.objects.filter(xq=semester).values('xh_id').distinct().count()
-    teacher_count = Open_lesson.objects.filter(xq=semester).values('gh_id').distinct().count()
+    stu_count = Option_lesson.objects.filter(xq=semester).values('xh_id').count()
+    teacher_count = Open_lesson.objects.filter(xq=semester).values('gh_id').count()
     cursor = connection.cursor()
     cursor.execute("select xm,count(xh_id) from school_teacher tb1,school_option_lesson tb2 "
                    "where tb1.gh=tb2.gh_id and xq='"+semester+"' group by tb1.gh order by 2 desc;")
@@ -151,6 +152,36 @@ def Index(request):
     return render(request, './superuser/index.html', context)
 
 
+def Index_search(request, content):
+    context = {}
+    student_list = Stu_table.objects.filter(Q(xm__contains=content) | Q(xh__contains=content) | Q(jg__contains=content)
+                                            | Q(sjhm__contains=content))
+    paginator = Paginator(student_list, 20)
+    page_num = request.GET.get('page', 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    school_list = School.objects.all()
+    context['school_list'] = school_list
+
+    return render(request, './superuser/index_search.html', context)
+
+
 def SchoolTable(request):
     context  ={}
     school_list = School.objects.all()
@@ -178,6 +209,35 @@ def SchoolTable(request):
     context['school_list'] = school_list
 
     return render(request, './superuser/school.html', context)
+
+
+def SchoolTable_Search(request, content):
+    context = {}
+    school_list = School.objects.filter(Q(mc__contains=content) | Q(dz__contains=content) | Q(lxdh__contains=content))
+    paginator = Paginator(school_list, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    school_list = School.objects.all()
+    context['school_list'] = school_list
+
+    return render(request, './superuser/school_search.html', context)
 
 
 @require_http_methods(['POST'])
@@ -244,6 +304,35 @@ def TeacherTable(request):
     return render(request, './superuser/teacher.html', context)
 
 
+def TeacherTable_search(request, content):
+    context = {}
+    teacher_list = Teacher.objects.filter(Q(xm__contains=content) | Q(gh__contains=content))
+    paginator = Paginator(teacher_list, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    school_list = School.objects.all()
+    context['school_list'] = school_list
+
+    return render(request, './superuser/teacher_search.html', context)
+
+
 def LessonTable(request):
     context = {}
     lesson_list = Lesson.objects.all()
@@ -275,6 +364,37 @@ def LessonTable(request):
     return render(request, './superuser/lesson.html', context)
 
 
+def LessonTable_search(request, content):
+    context = {}
+    lesson_list = Lesson.objects.filter(Q(kh__contains=content) | Q(km__contains=content))
+    paginator = Paginator(lesson_list, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    school_list = School.objects.all()
+    context['school_list'] = school_list
+    context['credit'] = 4
+    context['time'] = 40
+
+    return render(request, './superuser/lesson_search.html', context)
+
+
 def Open_Lesson_Table(request):
     context = {}
     lesson_list = Open_lesson.objects.all()
@@ -302,6 +422,36 @@ def Open_Lesson_Table(request):
     context['school_list'] = school_list
 
     return render(request, './superuser/open_lesson.html', context)
+
+
+def Open_Lesson_Table_search(request, content):
+    context = {}
+    lesson_list = Open_lesson.objects.filter(Q(xq__contains=content) | Q(kh__kh__contains=content) |
+                                             Q(gh__gh__contains=content) | Q(sksj__contains=content))
+    paginator = Paginator(lesson_list, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    school_list = School.objects.all()
+    context['school_list'] = school_list
+
+    return render(request, './superuser/open_lesson_search.html', context)
 
 
 def EditStudent(request):
@@ -333,6 +483,36 @@ def EditStudent(request):
     return render(request, './superuser/editstudent.html', context)
 
 
+def EditStudent_search(request, content):
+    context = {}
+    student_list = Stu_table.objects.filter(Q(xm__contains=content) | Q(xh__contains=content) | Q(jg__contains=content)
+                                            | Q(sjhm__contains=content))
+    paginator = Paginator(student_list, 20)
+    page_num = request.GET.get('page', 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    school_list = School.objects.all()
+    context['school_list'] = school_list
+
+    return render(request, './superuser/editstudent_search.html', context)
+
+
 def Select_Lesson(request):
     context = {}
     lesson_list = Option_lesson.objects.all()
@@ -361,6 +541,35 @@ def Select_Lesson(request):
 
     return render(request, './superuser/option_lesson.html', context)
 
+
+def Select_Lesson_search(request, content):
+    context = {}
+    lesson_list = Option_lesson.objects.filter(Q(xh__xh__contains=content) | Q(xq__contains=content) |
+                                               Q(gh__gh__contains=content) | Q(kh__kh__contains=content))
+    paginator = Paginator(lesson_list, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    school_list = School.objects.all()
+    context['school_list'] = school_list
+
+    return render(request, './superuser/option_lesson_search.html', context)
 
 def Delete_stu(request):
     if request.method == 'POST':
@@ -426,6 +635,35 @@ def Editschool(request):
     return render(request, './superuser/editschool.html', context)
 
 
+def EditSchool_Search(request, content):
+    context = {}
+    school_list = School.objects.filter(Q(mc__contains=content) | Q(dz__contains=content) | Q(lxdh__contains=content))
+    paginator = Paginator(school_list, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    school_list = School.objects.all()
+    context['school_list'] = school_list
+
+    return render(request, './superuser/editschool_search.html', context)
+
+
 def Delete_School(request):
     if request.method == 'POST':
         number = request.POST.get('number')
@@ -486,6 +724,35 @@ def EditTeacher(request):
     return render(request, './superuser/editteacher.html', context)
 
 
+def EditTeacher_search(request, content):
+    context = {}
+    teacher_list = Teacher.objects.filter(Q(xm__contains=content) | Q(gh__contains=content))
+    paginator = Paginator(teacher_list, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    school_list = School.objects.all()
+    context['school_list'] = school_list
+
+    return render(request, './superuser/editteacher_search.html', context)
+
+
 def Amend_Teacher(request):
     if request.method == 'POST':
         number = request.POST.get('number')
@@ -537,6 +804,37 @@ def EditLesson(request):
     context['hours'] = 40
 
     return render(request, './superuser/editlesson.html', context)
+
+
+def EditLesson_search(request, content):
+    context = {}
+    lesson_list = Lesson.objects.filter(Q(kh__contains=content) | Q(km__contains=content))
+    paginator = Paginator(lesson_list, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    school_list = School.objects.all()
+    context['school_list'] = school_list
+    context['credit'] = 4
+    context['time'] = 40
+
+    return render(request, './superuser/editlesson_search.html', context)
 
 
 @require_http_methods(['POST'])
@@ -627,6 +925,36 @@ def Edit_Openlesson(request):
     context['page_range'] = page_range
 
     return render(request, './superuser/edit_open_lesson.html', context)
+
+
+def Edit_Openlesson_search(request, content):
+    context = {}
+    lesson_list = Open_lesson.objects.filter(Q(xq__contains=content) | Q(kh__kh__contains=content) |
+                                             Q(gh__gh__contains=content) | Q(sksj__contains=content))
+    paginator = Paginator(lesson_list, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    school_list = School.objects.all()
+    context['school_list'] = school_list
+
+    return render(request, './superuser/edit_open_lesson_search.html', context)
 
 
 @require_http_methods(['POST'])
@@ -731,6 +1059,36 @@ def EditOptionLesson(request):
     context['page_range'] = page_range
 
     return render(request, './superuser/edit_option_lesson.html', context)
+
+
+def EditOptionLesson_search(request, content):
+    context = {}
+    lesson_list = Option_lesson.objects.filter(Q(xh__xh__contains=content) | Q(xq__contains=content) |
+                                               Q(gh__gh__contains=content) | Q(kh__kh__contains=content))
+    paginator = Paginator(lesson_list, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    school_list = School.objects.all()
+    context['school_list'] = school_list
+
+    return render(request, './superuser/edit_option_lesson_search.html', context)
 
 
 @require_http_methods(['POST'])

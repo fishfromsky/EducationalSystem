@@ -90,7 +90,9 @@
             let number = getCookie('number');
             let lesson = sessionStorage.getItem('lesson');
             sessionStorage.setItem('semester', semester);
-            window.location.href = 'http://localhost:8000/t_grade_check/'+number+'/'+semester+'/'+lesson;
+            let url = '{% url 'Check_grade' 'number' 'semester' 'lesson' %}';
+            url = url.replace(/number/,number).replace(/semester/,semester).replace(/lesson/,lesson);
+            window.location.href = url;
         });
         $("#search_button").click(function () {
             let content = $("#search_input").val();
@@ -101,7 +103,10 @@
             }
             else{
                 sessionStorage.setItem('semester', semester);
-                location.href = 'http://localhost:8000/t_grade_check/'+getCookie('number')+'/'+semester+'/'+lesson+'/'+content;
+                let url = '{% url 'Check_search' 'number' 'semester' 'lesson' 'content' %}';
+                url = url.replace(/number/,getCookie('number')).replace(/semester/,semester).replace(/lesson/,lesson)
+                    .replace(/content/,content);
+                window.location.href = url;
             }
         })
     </script>

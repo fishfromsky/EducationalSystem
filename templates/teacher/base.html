@@ -105,21 +105,27 @@
             sessionStorage.removeItem('lesson');
             let teacher_number = getCookie('number');
             let teacher_semester = document.getElementById('semester').innerText;
-            window.location.href = "http://localhost:8000/t_register/"+teacher_number+'/'+teacher_semester;
+            let url = "{% url 'Grade' 'number' 'semester' %}";
+            url = url.replace(/number/, teacher_number).replace(/semester/, teacher_semester);
+            window.location.href = url;
         }
         function Transfer_lesson() {
             sessionStorage.removeItem('semester');
             sessionStorage.removeItem('lesson');
             let teacher_number = getCookie('number');
             let semester_number = document.getElementById('semester').innerText;
-            window.location.href = "http://localhost:8000/t_lesson/"+teacher_number+'/'+semester_number;
+            let url = '{% url 't_Lesson' 'number' 'semester' %}';
+            url = url.replace(/number/, teacher_number).replace(/semester/,semester_number);
+            window.location.href = url;
          }
          function Transfer_select_lesson() {
              sessionStorage.removeItem('semester');
              sessionStorage.removeItem('lesson');
              let teacher_number = getCookie('number');
              let semester_number = document.getElementById('semester').innerText;
-             window.location.href = "http://localhost:8000/t_select/"+teacher_number+'/'+semester_number;
+             let url = '{% url 't_Select_Lesson' 'number' 'semester' %}';
+             url = url.replace(/number/, teacher_number).replace(/semester/,semester_number);
+             window.location.href = url;
          }
     </script>
     <script>

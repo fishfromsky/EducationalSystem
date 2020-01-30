@@ -232,6 +232,12 @@
     </script>
     <script>
         toastr.options.positionClass = "toast-top-center";
+         $("#search_btn").click(function () {
+             let content = $("#search-input").val();
+             let url = '{% url 'EditLessonSearch' 'content' %}';
+             url = url.replace(/content/,content);
+             window.location.href = url;
+         });
         $("#addschool").click(function () {
             $("#MyLesson_add").modal()
         });

@@ -289,6 +289,12 @@
 {% block script %}
     <script>
         toastr.options.positionClass = "toast-top-center";
+         $("#search_btn").click(function () {
+             let content = $("#search-input").val();
+             let url = '{% url 'EditStudentSearch' 'content' %}';
+             url = url.replace(/content/,content);
+             window.location.href = url;
+         });
          $("#addstudent").click(function () {
             $("#MyModal_add").modal();
          });

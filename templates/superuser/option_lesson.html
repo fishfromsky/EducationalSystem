@@ -138,13 +138,19 @@
 {% block panel_content %}
     <ul class="nav nav-pills nav-stacked">
         <li role="presentation" id="add_option_lesson"><a href="#">添加选课信息</a></li>
-        <li role="presentation"><a href="{% url "EditOptionLesson" %}">编辑选课信息</a></li>
+        <li role="presentation"><a href="{% url 'EditOptionLesson' %}">编辑选课信息</a></li>
     </ul>
 {% endblock %}
 
 {% block script %}
     <script>
         toastr.options.positionClass = "toast-top-center";
+        $("#search_btn").click(function () {
+             let content = $("#search-input").val();
+             let url = '{% url 'Select_lesson_search' 'content' %}';
+             url = url.replace(/content/,content);
+             window.location.href = url;
+         });
         $("#add_option_lesson").click(function () {
             $("#OptionLesson_add").modal();
         });

@@ -128,6 +128,12 @@
 {% block script %}
     <script>
          toastr.options.positionClass = "toast-top-center";
+         $("#search_btn").click(function () {
+             let content = $("#search-input").val();
+             let url = '{% url 'SchoolSearch' 'content' %}';
+             url = url.replace(/content/,content);
+             window.location.href = url;
+         });
          $("#addschool").click(function () {
             $("#MySchool").modal()
          });
