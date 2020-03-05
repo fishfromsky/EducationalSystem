@@ -37,5 +37,14 @@ urlpatterns = [
     path('stop_grade_register/', views.Stop_Grade_register_PS, name="StopGradePs"),
     path('judge_grade_register/', views.Judge_grade_register, name="JudgeGrade"),
     path('start_grade_register_exam/', views.Start_Grade_Register_KS, name="StartGradeKs"),
-    path('stop_grade_register_exam/', views.Stop_Grade_Register_KS, name="StopGradeKs")
+    path('stop_grade_register_exam/', views.Stop_Grade_Register_KS, name="StopGradeKs"),
+    path('delete_note_school/', views.Delete_Note, name='Delete_Note'),
+    path('save_note_school/', views.Save_Note, name='Save_Note'),
+    path('save_note_teacher/', views.Save_teacher_Note, name='Save_Teacher_Note'),
+    path('delete_note_teacher/', views.Delete_Teacher_Note, name='Delete_Teacher_Note'),
+    path('save_note_student/', views.Save_Student_Note, name='Save_student_Note'),
+    path('delete_note_student/', views.Delete_Student_Note, name='Delete_Student_Note'),
+    path('send_school_note/', views.Send_School_Note, name='Send_School_Note'),
+    path('send_teacher_note/', views.Send_Teacher_Note, name='Send_Teacher_Note'),
+    path('t_send_note', views.T_Send_Note, name='T_Send_note')
 ]

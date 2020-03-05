@@ -31,7 +31,14 @@
             <div id="location_distribute" style="width: 400px; height: 400px"></div>
         </div>
     </div>
-    <div id="semester_distribute" style="width: 1050px; height: 400px"></div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div id="semester_distribute" style="width: 500px; height: 300px"></div>
+        </div>
+        <div class="col-xs-6">
+            <div id="open_lesson_distribute" style="width: 500px; height: 300px"></div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block script %}
@@ -98,9 +105,12 @@
             $("#semester_change").val(semes);
             $("#number_count").text('0');
             $("#number_count1").text('0');
+            var lesson_distribute_count = [];
             var stu_distribute_count = [];
             var semester_total = [];
             var number_total = [];
+            let lesson_number_total = [];
+            let semester_lesson_total = [];
             var semester = "";
             setTimeout(function () {
                 if (sessionStorage.getItem('semester') !== null){
@@ -154,9 +164,15 @@
                             dict['name'] = distributes[i][1];
                             stu_distribute_count.push(dict);
                         }
+
                         let result = SortSemester(res.semesters, res.semester_list);
                         semester_total = result[0];
                         number_total = result[1];
+
+                        let lesson_result = SortSemester(res.semesters, res.open_lessons);
+                        semester_lesson_total = lesson_result[0];
+                        lesson_number_total = lesson_result[1];
+
                         var mycharts = echarts.init(document.getElementById('student_distribute'));
                         var option = {
                             title : {
@@ -246,7 +262,31 @@
                             xAxis: {
                                 type: 'category',
                                 boundaryGap: false,
-                                data: semester_total
+                                data: semester_total,
+                                axisLabel:{
+                                    formatter: function(value) {
+                                    // console.log(value);
+                                    var valueDetal = value.split("-").join("");
+                                    var ret = ""; //拼接加\n返回的类目项
+                                    var maxLength = 4; //每项显示文字个数
+                                    var valLength = valueDetal.length; //X轴类目项的文字个数
+                                    // console.log(valLength);
+                                    var rowN = Math.ceil(valLength / maxLength); //类目项需要换行的行数
+                                    if (rowN > 1) { //如果类目项的文字大于3,
+                                        for (var i = 0; i < rowN; i++) {
+                                            var temp = ""; //每次截取的字符串
+                                            var start = i * maxLength; //开始截取的位置
+                                            var end = start + maxLength; //结束截取的位置
+                                            //这里也可以加一个是否是最后一行的判断，但是不加也没有影响，那就不加吧
+                                            temp = valueDetal.substring(start, end) + "\n";
+                                            ret += temp; //凭借最终的字符串
+                                        }
+                                        return ret;
+                                    } else {
+                                        return valueDetal;
+                                    }
+                                }
+                                }
                             },
                             yAxis: {
                                 type: 'value'
@@ -261,6 +301,69 @@
                             ]
                         };
                         mycharts1.setOption(option1);
+
+                        let myCharts2 = echarts.init(document.getElementById('open_lesson_distribute'));
+                        var option2 = {
+                            title: {
+                                text: '各学期开课数走势图',
+                                x: 'center'
+                            },
+                            tooltip: {
+                                trigger: 'axis'
+                            },
+                            grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+                            toolbox: {
+                                feature: {
+                                    saveAsImage: {}
+                                }
+                            },
+                            xAxis: {
+                                type: 'category',
+                                boundaryGap: false,
+                                data: semester_lesson_total,
+                                axisLabel:{
+                                    formatter: function(value) {
+                                    // console.log(value);
+                                    var valueDetal = value.split("-").join("");
+                                    var ret = ""; //拼接加\n返回的类目项
+                                    var maxLength = 4; //每项显示文字个数
+                                    var valLength = valueDetal.length; //X轴类目项的文字个数
+                                    // console.log(valLength);
+                                    var rowN = Math.ceil(valLength / maxLength); //类目项需要换行的行数
+                                    if (rowN > 1) { //如果类目项的文字大于3,
+                                        for (var i = 0; i < rowN; i++) {
+                                            var temp = ""; //每次截取的字符串
+                                            var start = i * maxLength; //开始截取的位置
+                                            var end = start + maxLength; //结束截取的位置
+                                            //这里也可以加一个是否是最后一行的判断，但是不加也没有影响，那就不加吧
+                                            temp = valueDetal.substring(start, end) + "\n";
+                                            ret += temp; //凭借最终的字符串
+                                        }
+                                        return ret;
+                                    } else {
+                                        return valueDetal;
+                                    }
+                                }
+                                }
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [
+                                {
+                                    name:'选课学生数',
+                                    type:'line',
+                                    stack: '总量',
+                                    data:lesson_number_total
+                                }
+                            ]
+                        };
+                        myCharts2.setOption(option2)
 
                     },
                     fail(){

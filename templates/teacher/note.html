@@ -1,0 +1,168 @@
+{% extends './base.html' %}
+
+{% block note %}active{% endblock %}
+
+{% block title %}通知管理{% endblock %}
+
+{% block style %}
+    <style>
+        table tr td{
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .btn_send_note{
+            width: 100%;
+            margin-bottom: 20px;
+            height: 40px;
+        }
+        .input-textarea{
+            width: 90%;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        .note_content_box{
+            padding: 0 40px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="modal fade" id="send_note" tabindex="-1" aria-labelledby="myModalLabel">
+       <div class="modal-dialog" style="top: 20%">
+           <div class="modal-content">
+               <form class="form-horizontal" method="post" autocomplete="off" accept-charset="UTF-8">
+                   {% csrf_token %}
+                   <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                      <h4 class="modal-title" style="text-align: center;font-size: 25px;">发布通知</h4>
+                   </div>
+                   <div class="modal-body">
+                        <div class="form-group">
+                            <div class="class_num">
+                                <label for="name" class="control-label">通知所属课程号：</label>
+                                <div style="width: 100%; padding: 0 20px;">
+                                    <input type="text" id="note-lessonId"
+                                           class="form-control class_input" placeholder="请输入发布通知的课程号">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="note_content_box">
+                                <label class="control-label">通知内容：</label>
+                                <div class="input-textareaz">
+                                    <textarea placeholder="请输入通知内容" class="form-control" id="send_note_content"
+                                              rows="6" style="min-width: 90%"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                   </div>
+                   <div class="modal-footer">
+                       <button class="btn btn-primary" type="button" id="teacher_note_save">保存并发布</button>
+                       <button class="btn btn-info" type="button" data-dismiss="modal">取消</button>
+                   </div>
+               </form>
+           </div>
+       </div>
+    </div>
+    {% block sub_content %}{% endblock %}
+{% endblock %}
+
+{% block panel %}
+    <div class="panel-primary panel">
+        <div class="panel-heading" style="text-align: center">
+            查看通知类型
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="{% block school_note_active %}{% endblock %}" onclick="Transfer_school_note()">
+                    <a href="#">查看全校通知</a></li>
+                <li role="presentation" class="{% block teacher_note_active %}{% endblock %}" onclick="Transfer_teacher_note()">
+                    <a href="#">查看教师通知</a>
+                </li>
+                <li role="presentation" class="{% block student_note_active %}{% endblock %}" onclick="Transfer_student_note()">
+                    <a href="#">查看学生通知</a></li>
+            </ul>
+        </div>
+    </div>
+    <button type="button" id="btn_send_note" class="btn btn-info btn_send_note">发布新的通知</button>
+{% endblock %}
+
+{% block script %}
+    <script>
+        toastr.options.positionClass = 'toast-top-center';
+        $("#btn_send_note").click(function () {
+           $("#send_note").modal()
+        });
+        $("#teacher_note_save").click(function () {
+             if ($("#note-lessonId").val() === ''){
+                toastr.error('输入课号内容不能为空')
+            }
+            else if ($("#send_note_content").val() === ''){
+                toastr.error('输入通知内容不能为空')
+            }
+            else{
+                let data_obj = new FormData();
+                let number = getCookie('number');
+                let semester = $("#semester").text();
+                let kh = $("#note-lessonId").val();
+                let content = $("#send_note_content").val();
+                data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+                data_obj.append('gh', number);
+                data_obj.append('kh', kh);
+                data_obj.append('xq', semester);
+                data_obj.append('content', content);
+                $.ajax({
+                    url: '{% url 'T_Send_note' %}',
+                    type:'post',
+                    data:data_obj,
+                    dataType:'json',
+                    processData:false,
+                    contentType:false,
+                    success(res) {
+                        if (res.code === -1){
+                            toastr.error('本学期没有该课程')
+                        }
+                        else{
+                            toastr.success('发布成功');
+                            setTimeout(function () {
+                                location.reload()
+                            },2000)
+                        }
+                    },
+                    fail() {
+                        toastr.error('发布失败')
+                    }
+                })
+             }
+        });
+        window.onpageshow = function(){
+            setTimeout(function () {
+                let semes = sessionStorage.getItem('semester');
+                if (semes === null){
+                    semes = $("#semester").text();
+                }
+                $("#semester_change").val(semes);
+            },100)
+        };
+        function Transfer_student_note() {
+           let number = getCookie('number');
+           let semester = $("#semester").text();
+           let url = '{% url 'Get_Teacher_Note' 'gh' 'xq' %}';
+           url = url.replace(/gh/, number).replace(/xq/, semester);
+           window.location.href = url;
+        }
+        function Transfer_school_note() {
+            let semester = $("#semester").text();
+            let url = '{% url 'T_Get_School_Note' 'xq' %}';
+            url = url.replace(/xq/, semester);
+            window.location.href = url;
+        }
+        function Transfer_teacher_note() {
+            let semester = $("#semester").text();
+            let url = '{% url 'School_Teacher_Note' 'xq' %}';
+            url = url.replace(/xq/, semester);
+            window.location.href = url;
+        }
+    </script>
+{% endblock %}

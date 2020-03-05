@@ -37,6 +37,9 @@ urlpatterns = [
     path('select_lesson/<str:content>', views.Select_Lesson_search, name='Select_lesson_search'),
     path('editschool/', views.Editschool, name="Editschool"),
     path('editschool/<str:content>', views.EditSchool_Search, name='EditSchoolSearch'),
+    path('note_school/', views.Get_note, name='Get_Note'),
+    path('note_teacher/', views.Get_School_Note_teacher, name='GetSchoolTeacherNote'),
+    path('note_student/', views.Get_School_Note_student, name='GetSchoolStudentNote'),
     path('api/', include(school.urls)),
     path('editteacher/', views.EditTeacher, name="EditTeacher"),
     path('editteacher/<str:content>', views.EditTeacher_search, name='EditTeacherSearch'),
@@ -59,5 +62,12 @@ urlpatterns = [
     path('t_grade_check/<str:number>/<str:semester>/<str:lesson>/<str:content>', views.Check_Grade_search,
          name='Check_search'),
     path('t_grade/<str:number>/<str:semester>/<str:lesson>/<str:content>', views.Register_Grade_search,
-         name="RegisterGradeSearch")
+         name="RegisterGradeSearch"),
+    path('t_note/<str:gh>/<str:xq>', views.Get_Teacher_Note, name='Get_Teacher_Note'),
+    path('t_note_school/<str:xq>', views.T_Get_School_Note, name='T_Get_School_Note'),
+    path('t_note/<str:gh>/<str:xq>/<str:content>', views.T_Search_Note, name='Teacher_Search_note'),
+    path('t_note_school/<str:xq>/<str:content>', views.T_Get_School_Note_Search, name='T_Get_School_Note_Search'),
+    path('t_school_teacher_note/<str:xq>', views.Get_School_to_teacher_note, name='School_Teacher_Note'),
+    path('t_school_teachet_note_s/<str:xq>/<str:content>', views.Get_School_to_teacher_note_Search,
+         name='School_Teacher_Note_Search')
 ]

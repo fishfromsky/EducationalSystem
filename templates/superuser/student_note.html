@@ -1,0 +1,234 @@
+{% extends './note.html' %}
+
+{% block sub_content1 %}
+    <table class="table table-striped" style="table-layout: fixed">
+        <tr>
+            <th>工号</th>
+            <th>课号</th>
+            <th>学期</th>
+            <th>状态</th>
+            <th>发布时间</th>
+            <th>通知内容</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        {% for note in page_of_list %}
+            <tr>
+                <td>{{ note.gh }}</td>
+                <td>{{ note.kh }}</td>
+                <td>{{ note.xq }}</td>
+                <td>学生通知</td>
+                <td>{{ note.created_time }}</td>
+                <td>{{ note.content}}</td>
+                <td style="padding-left: 30px">
+                    <button class="btn btn-info" type="button"
+                            onclick="Note_Detail('{{ note.gh }}', '{{ note.kh }}', '{{ note.xq }}', '{{ note.created_time }}', '{{ note.content }}')">查看详情</button>
+                </td>
+                <td style="padding-left: 30px">
+                    <button class="btn btn-warning" type="button"
+                    onclick="Edit_Note('{{ note.id }}', '{{ note.content }}')">编辑通知</button>
+                </td>
+                <td style="padding-left: 30px">
+                    <button class="btn btn-danger" type="button"
+                    onclick="Delete_Note('{{ note.id }}')">删除通知</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination" style="margin-left: 42%">
+            <li>
+                {% if page_of_list.has_previous %}
+                    <a href="?page={{ page_of_list.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                 {% else %}
+                    <span aria-hidden="true">&laquo;</span>
+                {% endif %}
+            </li>
+            {% for page_number in page_range %}
+                {% if page_number == page_of_list.number %}
+                        <li class="active"><span>{{ page_number }}</span></li>
+                {% else %}
+                    <li><a href="?page={{ page_number }}">{{ page_number }}</a></li>
+                {% endif %}
+            {% endfor %}
+            <li>
+                {% if page_of_list.has_next %}
+                    <a href="?page={{ page_of_list.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                {% else %}
+                    <span aria-hidden="true">&raquo;</span>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+    <div class="modal fade" id="s_note_detail" tabindex="-1" aria-labelledby="myModalLabel">
+       <div class="modal-dialog" style="top: 20%">
+           <div class="modal-content">
+               {% csrf_token %}
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  <h4 class="modal-title" style="text-align: center;font-size: 25px;">通知详情</h4>
+               </div>
+               <div class="modal-body">
+                    <label class="col-md-4 control-label">工号：</label>
+                    <p id="s_detail_gh" class="col-md-8"></p>
+                    <label class="col-md-4 control-label">课号：</label>
+                    <p id="s_detail_kh" class="col-md-8"></p>
+                    <label class="col-md-4 control-label">发布学期：</label>
+                    <p id="s_detail_xq" class="col-md-8"></p>
+                    <label class="col-md-4 control-label">发布时间</label>
+                    <p id="s_detail_sj" class="col-md-8"></p>
+                    <label class="control-label col-md-4">通知内容：</label>
+                    <div class="col-md-8">
+                        <p id="s_detail_content"></p>
+                    </div>
+               </div>
+               <div class="modal-footer">
+                   <button class="btn btn-primary" type="button" data-dismiss="modal">确定</button>
+                   <button class="btn btn-info" type="button" data-dismiss="modal">取消</button>
+               </div>
+           </div>
+       </div>
+    </div>
+    <div class="modal fade" id="s_Edit_note" tabindex="-1" aria-labelledby="myModalLabel">
+       <div class="modal-dialog" style="top: 20%">
+           <div class="modal-content">
+               <form class="form-horizontal" method="post" autocomplete="off" accept-charset="UTF-8">
+                   {% csrf_token %}
+                   <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                      <h4 class="modal-title" style="text-align: center;font-size: 25px;">修改通知内容</h4>
+                   </div>
+                   <div class="modal-body">
+                        <div class="form-group" style="text-align: center">
+                            <div class="input-textarea">
+                                <textarea class="form-control input-textarea" id="s_note_modify" rows="6" style="min-width: 90%"></textarea>
+                            </div>
+                        </div>
+                       <input type="hidden" id="s_note_id">
+                   </div>
+                   <div class="modal-footer">
+                       <button class="btn btn-primary" type="button" id="s_note_save">确认修改</button>
+                       <button class="btn btn-info" type="button" data-dismiss="modal">取消</button>
+                   </div>
+               </form>
+           </div>
+       </div>
+    </div>
+     <div class="modal fade" id="s_Delete_note" tabindex="-1" aria-labelledby="myModalLabel">
+       <div class="modal-dialog" style="top: 20%">
+           <div class="modal-content">
+               <form class="form-horizontal" method="post" autocomplete="off" accept-charset="UTF-8">
+                   {% csrf_token %}
+                   <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                      <h4 class="modal-title" style="text-align: center;font-size: 25px;">删除通知</h4>
+                   </div>
+                   <div class="modal-body">
+                       <h4 style="color: red">确定删除该通知吗？</h4>
+                       <input type="hidden" id="s_delete_note_id">
+                   </div>
+                   <div class="modal-footer">
+                       <button class="btn btn-danger" type="button" id="s_delete_save">确认删除</button>
+                       <button class="btn btn-default" type="button" data-dismiss="modal">取消</button>
+                   </div>
+               </form>
+           </div>
+       </div>
+    </div>
+
+    <script>
+         window.onpageshow = function () {
+             var role = getCookie('role');
+             var status = getCookie('status');
+             if (role !== "superuser" || status === ""){
+                 window.location.href = "{% url 'Login' %}"
+             }
+             else{
+                 for (let i=1; i<=3; i++){
+                    $(".list"+i.toString()+" a").css('color', '#000');
+                    $(".list"+i.toString()).css('background', '#f4f4f4')
+                }
+                $(".list3").css('background','#0477c5');
+                $(".list3 a").css('color', '#fff')
+             }
+         };
+         function Note_Detail(gh,kh,xq,time,content) {
+             $("#s_detail_gh").text(gh);
+             $("#s_detail_kh").text(kh);
+             $("#s_detail_xq").text(xq);
+             $("#s_detail_sj").text(time);
+             $("#s_detail_content").text(content);
+             $("#s_note_detail").modal();
+         }
+         function Edit_Note(id, content) {
+             $("#s_note_id").val(id);
+             $("#s_note_modify").val(content);
+             $("#s_Edit_note").modal()
+         }
+         function Delete_Note(id){
+             $("#s_delete_note_id").val(id);
+             $("#s_Delete_note").modal()
+         }
+         $("#s_note_save").click(function () {
+             let data_obj = new FormData();
+             data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+             data_obj.append('id', $("#s_note_id").val());
+             data_obj.append('content', $("#s_note_modify").val());
+             $.ajax({
+                url:'{% url 'Save_student_Note' %}',
+                type:'post',
+                data:data_obj,
+                dataType:'json',
+                processData:false,
+                contentType:false,
+                success(res) {
+                    if (res.code === 0){
+                        toastr.success('修改成功');
+                        setTimeout(function () {
+                            location.reload()
+                        }, 2000)
+                    }
+                    else{
+                        toastr.error('修改失败')
+                    }
+                },
+                fail() {
+                    toastr.error('修改失败')
+                }
+             })
+         });
+        $("#s_delete_save").click(function () {
+             let data_obj = new FormData();
+             data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+             data_obj.append('id', $("#s_delete_note_id").val());
+             $.ajax({
+                url:'{% url 'Delete_Student_Note' %}',
+                type:'post',
+                data:data_obj,
+                dataType:'json',
+                processData:false,
+                contentType:false,
+                success(res){
+                    if (res.code === 0){
+                        toastr.success('删除成功');
+                        setTimeout(function () {
+                            location.reload()
+                        },2000)
+                    }
+                    else{
+                        toastr.error('删除失败')
+                    }
+                },
+                fail(){
+                    toastr.error('删除失败')
+                }
+             })
+        })
+    </script>
+{% endblock %}

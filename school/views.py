@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import Stu_table, School, Teacher, Lesson, Open_lesson, Option_lesson, \
-    Student_Login, Teacher_Login, Supersuser, present_semester
+    Student_Login, Teacher_Login, Supersuser, present_semester, Note_table, School_Note_table, Teacher_Note_table
 from django.core.paginator import Paginator
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
@@ -1243,6 +1243,8 @@ def Get_Teacher_status(request):
     cursor = connection.cursor()
     semester = request.POST.get('semester')
     number = request.POST.get('number')
+    cursor.execute("select count(kh_id),xq from school_open_lesson where gh_id='"+number+"' group by xq")
+    open_lessons = cursor.fetchall()
     cursor.execute("select count(xh_id) from school_option_lesson tb1,school_open_lesson tb2 where"
                                 " tb2.gh_id=tb1.gh_id and tb2.kh_id=tb1.kh_id and tb2.xq=tb1.xq and tb1.gh_id="
                                 "'"+number+"' and tb1.xq='"+semester+"';")
@@ -1258,6 +1260,7 @@ def Get_Teacher_status(request):
                    "and gh_id='"+number+"' and xq='"+semester+"' group by jg;")
     location_list = cursor.fetchall()
     semesters = Option_lesson.objects.all().values('xq').distinct()
+    response['open_lessons'] = list(open_lessons)
     response['stu_distribute'] = list(stu_distribution)
     response['stu_number'] = stu_number
     response['lesson_number'] = lesson_number
@@ -1482,7 +1485,7 @@ def Judge_grade_register(request):
     return JsonResponse(response)
 
 
-@require_http_methods({'POST'})
+@require_http_methods(['POST'])
 def Start_Grade_Register_KS(request):
     response = {}
     grade = present_semester.objects.get(dqxq='1')
@@ -1493,7 +1496,7 @@ def Start_Grade_Register_KS(request):
     return JsonResponse(response)
 
 
-@require_http_methods({'POST'})
+@require_http_methods(['POST'])
 def Stop_Grade_Register_KS(request):
     response = {}
     grade = present_semester.objects.get(dqxq='1')
@@ -1592,3 +1595,364 @@ def Register_Grade_search(request, number, semester, lesson, content):
     context['page_of_list'] = page_of_list
     context['page_range'] = page_range
     return render(request, './teacher/grade_register_search.html', context)
+
+
+def Get_note(request):
+    context = {}
+    note_list = School_Note_table.objects.all()
+    paginator = Paginator(note_list, 20)
+    page_num = request.GET.get('page', 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+
+    return render(request, './superuser/school_note.html', context)
+
+
+@require_http_methods(['POST'])
+def Send_School_Note(request):
+    response = {}
+    xq = request.POST.get('xq')
+    content = request.POST.get('content')
+    note = School_Note_table(xq=xq, content=content)
+    note.save()
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Delete_Note(request):
+    response = {}
+    id = request.POST.get('id')
+    note = School_Note_table.objects.get(id=id)
+    note.delete()
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Save_Note(request):
+    response = {}
+    id = request.POST.get('id')
+    content = request.POST.get('content')
+    note = School_Note_table.objects.get(id=id)
+    note.content = content
+    note.save()
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Save_teacher_Note(request):
+    response = {}
+    id = request.POST.get('id')
+    content = request.POST.get('content')
+    note = Teacher_Note_table.objects.get(id=id)
+    note.content = content
+    note.save()
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Save_Student_Note(request):
+    response = {}
+    id = request.POST.get('id')
+    content = request.POST.get('content')
+    note = Note_table.objects.get(id=id)
+    note.content = content
+    note.save()
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Delete_Teacher_Note(request):
+    response = {}
+    id = request.POST.get('id')
+    note = Teacher_Note_table.objects.get(id=id)
+    note.delete()
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Delete_Student_Note(request):
+    response = {}
+    id = request.POST.get('id')
+    note = Note_table.objects.get(id=id)
+    note.delete()
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
+
+
+def Get_Teacher_Note(request, gh, xq):
+    context = {}
+    note = Note_table.objects.filter(gh_id=gh, xq=xq)
+    paginator = Paginator(note, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    return render(request, './teacher/student_note.html', context)
+
+
+@require_http_methods(['POST'])
+def T_Send_Note(request):
+    response = {}
+    gh = request.POST.get('gh')
+    kh = request.POST.get('kh')
+    xq = request.POST.get('xq')
+    content = request.POST.get('content')
+    if Teacher.objects.filter(gh=gh).count() == 0:
+        response['code'] = -2
+        response['message'] = 'DoseNotSuccess'
+    elif Open_lesson.objects.filter(gh_id=gh, xq=xq, kh_id=kh).count() == 0:
+        response['code'] = -1
+        response['message'] = 'DoseNotExist'
+    else:
+        note = Note_table(gh_id=Teacher(gh=gh), kh_id=Lesson(kh=kh), xq=xq, content=content)
+        note.save()
+        response['code'] = 0
+        response['message'] = 'success'
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Send_Teacher_Note(request):
+    response = {}
+    xq = request.POST.get('xq')
+    content = request.POST.get('content')
+    note = Teacher_Note_table(xq=xq, content=content)
+    note.save()
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
+
+
+def T_Search_Note(request, gh, xq, content):
+    context = {}
+    note = Note_table.objects.filter(gh_id=Teacher(gh=gh)).filter(xq=xq)\
+        .filter(Q(kh__kh__contains=content) | Q(content__contains=content))
+    paginator = Paginator(note, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+
+    return render(request, './teacher/note_search.html', context)
+
+
+def Get_School_Note_teacher(request):
+    context = {}
+    note_list = Teacher_Note_table.objects.all()
+    paginator = Paginator(note_list, 20)
+    page_num = request.GET.get('page', 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+
+    return render(request, './superuser/teacher_note.html', context)
+
+
+def Get_School_Note_student(request):
+    context = {}
+    note_list = Note_table.objects.all()
+    paginator = Paginator(note_list, 20)
+    page_num = request.GET.get('page', 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+
+    return render(request, './superuser/student_note.html', context)
+
+
+def T_Get_School_Note(request, xq):
+    context = {}
+    note = School_Note_table.objects.filter(xq=xq)
+    paginator = Paginator(note, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    return render(request, './teacher/school_note.html', context)
+
+
+def Get_School_to_teacher_note(request, xq):
+    context = {}
+    note = Teacher_Note_table.objects.filter(xq=xq)
+    paginator = Paginator(note, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    return render(request, './teacher/teacher_note.html', context)
+
+
+def T_Get_School_Note_Search(request, xq, content):
+    context = {}
+    note = School_Note_table.objects.filter(xq=xq) \
+        .filter(Q(content__contains=content))
+    paginator = Paginator(note, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+
+    return render(request, './teacher/school_note_search.html', context)
+
+
+def Get_School_to_teacher_note_Search(request, xq, content):
+    context = {}
+    note = Teacher_Note_table.objects.filter(xq=xq).filter(Q(content__contains=content))
+    paginator = Paginator(note, 20)
+    page_num = request.GET.get("page", 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+    return render(request, './teacher/teacher_note_serach.html', context)
+
+
+

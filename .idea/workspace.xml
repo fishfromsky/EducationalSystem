@@ -2,20 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75521e45-5c8c-413e-8e5e-4fc806c0221b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/superuser/edit_open_lesson_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/superuser/edit_option_lesson_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/superuser/editlesson_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/superuser/editschool_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/superuser/editstudent_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/superuser/editteacher_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/superuser/index_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/superuser/lesson_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/superuser/open_lesson_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/superuser/option_lesson_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/superuser/school_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/superuser/teacher_search.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/superuser/note.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/superuser/school_note.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/superuser/student_note.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/superuser/teacher_note.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/teacher/note.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/teacher/note_search.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/teacher/school_note.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/teacher/school_note_search.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/teacher/student_note.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/teacher/teacher_note.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/teacher/teacher_note_serach.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/school/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/school/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/school/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/school/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/school/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/school/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/school/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/school/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/image/building.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/superuser/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/superuser/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/superuser/edit_open_lesson.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/superuser/edit_open_lesson.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/superuser/edit_option_lesson.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/superuser/edit_option_lesson.html" afterDir="false" />
@@ -31,12 +34,14 @@
       <change beforePath="$PROJECT_DIR$/templates/superuser/school.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/superuser/school.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/superuser/teacher.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/superuser/teacher.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/teacher/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/teacher/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/teacher/grade.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/teacher/grade.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/teacher/grade_check.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/teacher/grade_check.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/teacher/grade_check_search.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/teacher/grade_check_search.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/teacher/grade_register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/teacher/grade_register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/teacher/lesson.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/teacher/lesson.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/teacher/grade_register_search.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/teacher/grade_register_search.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/teacher/select_lesson.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/teacher/select_lesson.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/teacher/select_search_lesson.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/teacher/select_search_lesson.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/teacher/t_index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/teacher/t_index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/数据库项目/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/数据库项目/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/数据库项目/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/数据库项目/urls.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -67,60 +72,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/superuser/base.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="107" column="27" selection-start-line="107" selection-start-column="27" selection-end-line="107" selection-end-column="27" />
-              <folding>
-                <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/superuser/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="274">
-              <caret line="171" column="45" lean-forward="true" selection-start-line="171" selection-start-column="45" selection-end-line="171" selection-end-column="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/superuser/editstudent.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="296" column="12" lean-forward="true" selection-start-line="291" selection-start-column="9" selection-end-line="296" selection-end-column="12" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/superuser/edit_option_lesson.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4123">
-              <caret line="14" column="17" lean-forward="true" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/superuser/option_lesson.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2660">
-              <caret line="140" column="65" selection-start-line="140" selection-start-column="65" selection-end-line="140" selection-end-column="65" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/school/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="27" column="43" lean-forward="true" selection-start-line="27" selection-start-column="43" selection-end-line="27" selection-end-column="43" />
+            <state relative-caret-position="473">
+              <caret line="1952" column="42" lean-forward="true" selection-start-line="1952" selection-start-column="42" selection-end-line="1952" selection-end-column="42" />
               <folding>
                 <element signature="e#0#45#0" expanded="true" />
               </folding>
@@ -129,24 +85,21 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/school/models.py">
+        <entry file="file://$PROJECT_DIR$/templates/teacher/teacher_note.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2109">
-              <caret line="111" column="55" selection-start-line="111" selection-start-column="55" selection-end-line="111" selection-end-column="55" />
-              <folding>
-                <element signature="e#0#28#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="428">
+              <caret line="97" column="27" selection-start-line="97" selection-start-column="27" selection-end-line="97" selection-end-column="27" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/数据库项目/urls.py">
+        <entry file="file://$PROJECT_DIR$/school/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="364">
-              <caret line="46" column="29" selection-start-line="46" selection-start-column="29" selection-end-line="46" selection-end-column="29" />
+            <state relative-caret-position="779">
+              <caret line="41" column="19" selection-start-line="41" selection-start-column="10" selection-end-line="41" selection-end-column="19" />
               <folding>
-                <element signature="e#629#661#0" expanded="true" />
+                <element signature="e#0#32#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -166,17 +119,9 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>btn-primary</find>
-      <find>nav</find>
-      <find>active</find>
-      <find>Init</find>
-      <find>Ensure</find>
-      <find>cjxq</find>
-      <find>Ensu</find>
       <find>number_count1</find>
       <find>getCooki</find>
       <find>getCoo</find>
-      <find>semester</find>
       <find>document</find>
       <find>docum</find>
       <find>doc</find>
@@ -194,6 +139,16 @@
       <find>Option_lesson</find>
       <find>option_lesson.html</find>
       <find>Select_lesson_search</find>
+      <find>Delete</find>
+      <find>btn_logout</find>
+      <find>Search</find>
+      <find>note_teacher</find>
+      <find>semester</find>
+      <find>Add</find>
+      <find>Save_note</find>
+      <find>Student_</find>
+      <find>Teacher_Search</find>
+      <find>Teacher_Search_note</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -202,52 +157,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/mysql.py" />
-        <option value="$PROJECT_DIR$/static/main.css" />
-        <option value="$PROJECT_DIR$/static/getcookie.js" />
-        <option value="$PROJECT_DIR$/school/models.py" />
-        <option value="$PROJECT_DIR$/school/admin.py" />
-        <option value="$PROJECT_DIR$/school/urls.py" />
-        <option value="$PROJECT_DIR$/static/toastr.css" />
-        <option value="$PROJECT_DIR$/templates/superuser/login.html" />
-        <option value="$PROJECT_DIR$/templates/teacher/t_index.html" />
-        <option value="$PROJECT_DIR$/templates/teacher/grade_register_search.html" />
-        <option value="$PROJECT_DIR$/templates/teacher/grade_check_search.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/main.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/index.html" />
-        <option value="$PROJECT_DIR$/templates/teacher/base.html" />
-        <option value="$PROJECT_DIR$/templates/teacher/grade.html" />
-        <option value="$PROJECT_DIR$/templates/teacher/lesson.html" />
-        <option value="$PROJECT_DIR$/templates/teacher/select_search_lesson.html" />
-        <option value="$PROJECT_DIR$/templates/teacher/select_lesson.html" />
-        <option value="$PROJECT_DIR$/templates/teacher/grade_check.html" />
-        <option value="$PROJECT_DIR$/templates/teacher/grade_register.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/school_search.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/school.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/editstudent_search.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/index_search.html" />
         <option value="$PROJECT_DIR$/templates/superuser/editschool_search.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/editschool.html" />
         <option value="$PROJECT_DIR$/templates/superuser/teacher_search.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/teacher.html" />
         <option value="$PROJECT_DIR$/templates/superuser/editteacher_search.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/editteacher.html" />
         <option value="$PROJECT_DIR$/templates/superuser/lesson_search.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/lesson.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/editstudent.html" />
         <option value="$PROJECT_DIR$/templates/superuser/editlesson_search.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/editlesson.html" />
         <option value="$PROJECT_DIR$/templates/superuser/open_lesson_search.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/open_lesson.html" />
-        <option value="$PROJECT_DIR$/templates/superuser/edit_open_lesson.html" />
         <option value="$PROJECT_DIR$/templates/superuser/edit_open_lesson_search.html" />
         <option value="$PROJECT_DIR$/templates/superuser/option_lesson_search.html" />
         <option value="$PROJECT_DIR$/templates/superuser/edit_option_lesson_search.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/grade_check.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/grade_register.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/select_lesson.html" />
+        <option value="$PROJECT_DIR$/数据库项目/settings.py" />
+        <option value="$PROJECT_DIR$/templates/superuser/edit_open_lesson.html" />
         <option value="$PROJECT_DIR$/templates/superuser/edit_option_lesson.html" />
-        <option value="$PROJECT_DIR$/数据库项目/urls.py" />
+        <option value="$PROJECT_DIR$/templates/superuser/editlesson.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/editschool.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/editstudent.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/editteacher.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/index.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/lesson.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/main.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/open_lesson.html" />
         <option value="$PROJECT_DIR$/templates/superuser/option_lesson.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/school.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/teacher.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/grade.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/base.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/select_search_lesson.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/grade_register_search.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/grade_check_search.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/get_note_detail.html" />
+        <option value="$PROJECT_DIR$/school/models.py" />
+        <option value="$PROJECT_DIR$/school/admin.py" />
         <option value="$PROJECT_DIR$/templates/superuser/base.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/school_note.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/teacher_note.html" />
+        <option value="$PROJECT_DIR$/templates/superuser/student_note.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/lesson.html" />
+        <option value="$PROJECT_DIR$/school/urls.py" />
+        <option value="$PROJECT_DIR$/templates/superuser/note.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/t_index.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/note.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/student_note.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/note_search.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/school_note_search.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/school_note.html" />
+        <option value="$PROJECT_DIR$/templates/teacher/teacher_note_serach.html" />
         <option value="$PROJECT_DIR$/school/views.py" />
+        <option value="$PROJECT_DIR$/数据库项目/urls.py" />
+        <option value="$PROJECT_DIR$/templates/teacher/teacher_note.html" />
       </list>
     </option>
   </component>
@@ -260,11 +220,10 @@
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="168" />
-    <option name="y" value="226" />
-    <option name="width" value="1830" />
-    <option name="height" value="1070" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-12" />
+    <option name="width" value="2182" />
+    <option name="height" value="1370" />
   </component>
   <component name="ProjectId" id="1V6F6HwQ8Itb0IU0SBMDeBRLEmp" />
   <component name="ProjectView">
@@ -272,6 +231,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -293,7 +253,7 @@
               <item name="EducationalSystem" type="b2602c69:ProjectViewProjectNode" />
               <item name="EducationalSystem" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="superuser" type="462c0819:PsiDirectoryNode" />
+              <item name="teacher" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="EducationalSystem" type="b2602c69:ProjectViewProjectNode" />
@@ -304,7 +264,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -313,7 +272,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="editor.config.ad.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../电商管理平台" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../党建平台" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -494,33 +453,57 @@
       <workItem from="1580266346145" duration="21274000" />
       <workItem from="1580349907461" duration="302000" />
       <workItem from="1580350239242" duration="802000" />
-      <workItem from="1580352167541" duration="25156000" />
+      <workItem from="1580352167541" duration="25496000" />
+      <workItem from="1580443251575" duration="597000" />
+      <workItem from="1580459883779" duration="23000" />
+      <workItem from="1580525427268" duration="609000" />
+      <workItem from="1580528012699" duration="925000" />
+      <workItem from="1580887460998" duration="1940000" />
+      <workItem from="1582450067365" duration="641000" />
+      <workItem from="1582937400022" duration="85000" />
+      <workItem from="1582938174395" duration="1079000" />
+      <workItem from="1583033669300" duration="1686000" />
+      <workItem from="1583069888525" duration="7603000" />
+      <workItem from="1583111261886" duration="29953000" />
+      <workItem from="1583205111366" duration="3326000" />
+      <workItem from="1583223493393" duration="8302000" />
+      <workItem from="1583246447104" duration="3783000" />
+      <workItem from="1583308783017" duration="15243000" />
+      <workItem from="1583369680414" duration="9853000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="214123000" />
+    <option name="totallyTimeSpent" value="300111000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1513" height="973" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.26012355" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.22031572" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Database Changes" order="0" />
-      <window_info anchor="bottom" id="Terminal" order="1" sideWeight="0.49828413" visible="true" weight="0.32858837" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="1" sideWeight="0.49828413" visible="true" weight="0.29774615" />
       <window_info anchor="bottom" id="Version Control" order="2" weight="0.32977462" />
       <window_info anchor="bottom" id="Event Log" order="3" sideWeight="0.50171584" side_tool="true" weight="0.32858837" />
       <window_info anchor="bottom" id="Python Console" order="4" weight="0.32977462" />
       <window_info anchor="bottom" id="Docker" order="5" show_stripe_button="false" />
       <window_info anchor="bottom" id="Message" order="6" />
-      <window_info anchor="bottom" id="Find" order="7" />
+      <window_info anchor="bottom" id="Find" order="7" weight="0.32977462" />
       <window_info anchor="bottom" id="Run" order="8" weight="0.32977462" />
       <window_info anchor="bottom" id="Debug" order="9" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="10" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="11" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="12" />
+      <window_info anchor="bottom" id="TODO" order="12" weight="0.32977462" />
       <window_info anchor="right" id="R Graphics" order="0" />
       <window_info anchor="right" id="R Packages" order="1" />
       <window_info anchor="right" id="SciView" order="2" />
@@ -537,286 +520,6 @@
     <SUITE FILE_PATH="coverage/EducationalSystem$mysql.coverage" NAME="mysql Coverage Results" MODIFIED="1577192141938" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/数据库项目/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1121">
-          <caret line="83" column="28" selection-start-line="83" selection-start-column="28" selection-end-line="83" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/school/admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="60" column="59" selection-start-line="60" selection-start-column="59" selection-end-line="60" selection-end-column="59" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/school/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="703">
-          <caret line="39" column="87" selection-start-line="39" selection-start-column="87" selection-end-line="39" selection-end-column="87" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mysql.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
-          <folding>
-            <element signature="e#20#34#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/数据库项目/wsgi.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/toastr.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="49" column="11" selection-start-line="49" selection-start-column="11" selection-end-line="49" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/getcookie.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="13" column="50" lean-forward="true" selection-start-line="13" selection-start-column="50" selection-end-line="13" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/jquery.cookie.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="3" selection-start-column="3" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="331">
-          <caret line="208" column="123" selection-start-line="208" selection-start-column="123" selection-end-line="208" selection-end-column="123" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/image/building.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/image/header_bg.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/main.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1520">
-          <caret line="80" column="13" lean-forward="true" selection-start-line="80" selection-start-column="13" selection-end-line="80" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/index.css">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/teacher/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="118" column="21" selection-start-line="118" selection-start-column="12" selection-end-line="118" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/teacher/grade_check.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="100" column="32" lean-forward="true" selection-start-line="100" selection-start-column="32" selection-end-line="100" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/teacher/grade_check_search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/teacher/select_search_lesson.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="95" column="61" selection-start-line="95" selection-start-column="61" selection-end-line="95" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/teacher/t_index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
-          <caret line="277" column="21" selection-start-line="277" selection-start-column="21" selection-end-line="277" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/teacher/select_lesson.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="21" selection-start-column="19" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/teacher/lesson.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="58" column="50" lean-forward="true" selection-start-line="58" selection-start-column="50" selection-end-line="58" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/teacher/grade_register_search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="171" column="13" lean-forward="true" selection-start-line="171" selection-start-column="13" selection-end-line="171" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/teacher/grade_register.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="243" column="61" selection-start-line="243" selection-start-column="61" selection-end-line="243" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/teacher/grade.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="21" selection-start-column="19" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/school.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="137" column="34" lean-forward="true" selection-start-line="137" selection-start-column="34" selection-end-line="137" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/school_search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/editstudent_search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/index_search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/editschool.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="215" column="48" selection-start-line="215" selection-start-column="48" selection-end-line="215" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/editschool_search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="15" selection-start-column="15" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/teacher_search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="26" selection-start-column="26" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/teacher.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="170" column="45" selection-start-line="170" selection-start-column="45" selection-end-line="170" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/editteacher.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="298" column="49" selection-start-line="298" selection-start-column="49" selection-end-line="298" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/editteacher_search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="30" selection-start-column="30" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/lesson_search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="29" lean-forward="true" selection-start-column="29" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/lesson.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="142" column="40" lean-forward="true" selection-start-line="142" selection-start-column="40" selection-end-line="142" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/editlesson_search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="29" selection-start-column="29" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/open_lesson.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="62" column="27" lean-forward="true" selection-start-line="62" selection-start-column="27" selection-end-line="62" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/open_lesson_search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="7" selection-start-column="7" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/editlesson.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1433">
-          <caret line="236" column="48" selection-start-line="236" selection-start-column="48" selection-end-line="236" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/edit_open_lesson_search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="35" selection-start-column="35" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/edit_open_lesson.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="217" column="49" lean-forward="true" selection-start-line="217" selection-start-column="49" selection-end-line="217" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/superuser/option_lesson_search.html">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -824,27 +527,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/editstudent.html">
+    <entry file="file://$PROJECT_DIR$/static/image/building.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/school/apps.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="296" column="12" lean-forward="true" selection-start-line="291" selection-start-column="9" selection-end-line="296" selection-end-column="12" />
+        <state relative-caret-position="95">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/数据库项目/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="93" column="5" lean-forward="true" selection-start-line="93" selection-start-column="5" selection-end-line="93" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/edit_open_lesson_search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="19" lean-forward="true" selection-start-column="19" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/superuser/edit_option_lesson.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4123">
-          <caret line="14" column="17" lean-forward="true" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/数据库项目/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="46" column="29" selection-start-line="46" selection-start-column="29" selection-end-line="46" selection-end-column="29" />
-          <folding>
-            <element signature="e#629#661#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="247">
+          <caret line="13" column="57" selection-start-line="13" selection-start-column="57" selection-end-line="13" selection-end-column="57" />
         </state>
       </provider>
     </entry>
@@ -855,45 +565,340 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/editlesson_search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="29" selection-start-column="29" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/editschool.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="13" column="57" selection-start-line="13" selection-start-column="57" selection-end-line="13" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/editschool_search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="15" selection-start-column="15" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/editstudent.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="15" column="57" selection-start-line="15" selection-start-column="57" selection-end-line="15" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/main.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="12" column="57" selection-start-line="12" selection-start-column="57" selection-end-line="12" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/open_lesson.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="18" column="57" selection-start-line="18" selection-start-column="57" selection-end-line="18" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/templates/superuser/option_lesson.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2660">
-          <caret line="140" column="65" selection-start-line="140" selection-start-column="65" selection-end-line="140" selection-end-column="65" />
+        <state relative-caret-position="323">
+          <caret line="17" column="57" selection-start-line="17" selection-start-column="57" selection-end-line="17" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/s_index.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/school.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="18" column="57" selection-start-line="18" selection-start-column="57" selection-end-line="18" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/teacher.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1957">
+          <caret line="20" column="57" selection-start-line="20" selection-start-column="57" selection-end-line="20" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/index_search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/editlesson.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="16" column="57" selection-start-line="16" selection-start-column="57" selection-end-line="16" selection-end-column="57" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/superuser/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
-          <caret line="171" column="45" lean-forward="true" selection-start-line="171" selection-start-column="45" selection-end-line="171" selection-end-column="45" />
+        <state relative-caret-position="342">
+          <caret line="78" column="57" selection-start-line="78" selection-start-column="57" selection-end-line="78" selection-end-column="57" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/superuser/base.html">
+    <entry file="file://$PROJECT_DIR$/templates/superuser/lesson.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="107" column="27" selection-start-line="107" selection-start-column="27" selection-end-line="107" selection-end-column="27" />
-          <folding>
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+        <state relative-caret-position="390">
+          <caret line="200" column="9" lean-forward="true" selection-start-line="194" selection-start-column="7" selection-end-line="200" selection-end-column="9" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/grade.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="599">
+          <caret line="59" column="58" lean-forward="true" selection-start-line="59" selection-start-column="8" selection-end-line="59" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/select_lesson.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-76">
+          <caret line="56" column="14" selection-start-line="56" selection-start-column="14" selection-end-line="56" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/grade_check_search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="30" selection-start-column="30" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/grade_register_search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="33" selection-start-column="33" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/select_search_lesson.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="32" selection-start-column="32" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/grade_check.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1330">
+          <caret line="70" column="55" selection-start-line="70" selection-start-column="12" selection-end-line="70" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/grade_register.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="87" selection-start-line="87" selection-end-line="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/get_note_detail.html" />
     <entry file="file://$PROJECT_DIR$/school/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2109">
-          <caret line="111" column="55" selection-start-line="111" selection-start-column="55" selection-end-line="111" selection-end-column="55" />
+        <state relative-caret-position="-9">
+          <caret line="115" lean-forward="true" selection-start-line="115" selection-end-line="115" />
           <folding>
             <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/school/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="371">
+          <caret line="76" lean-forward="true" selection-start-line="76" selection-end-line="76" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/teacher_note.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="699">
+          <caret line="200" column="48" selection-start-line="200" selection-start-column="48" selection-end-line="200" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/edit_open_lesson.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3823">
+          <caret line="116" column="11" selection-start-line="116" selection-start-column="11" selection-end-line="116" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/lesson.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="124">
+          <caret line="56" column="63" lean-forward="true" selection-start-line="56" selection-start-column="63" selection-end-line="56" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2307">
+          <caret line="185" column="74" selection-start-line="185" selection-start-column="66" selection-end-line="185" selection-end-column="74" />
+          <folding>
+            <element signature="n#style#0;n#text#0;n#div#0;n#div#1;n#div#1;n#div#2;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#select#0;n#div#0;n#div#1;n#form#0;n#div#0;n#div#0;n#div#3;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/student_note.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="188" column="34" lean-forward="true" selection-start-line="184" selection-start-column="15" selection-end-line="188" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/editteacher.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1007">
+          <caret line="18" column="57" selection-start-line="18" selection-start-column="57" selection-end-line="18" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/school_note.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1273">
+          <caret line="167" column="16" selection-start-line="167" selection-start-column="16" selection-end-line="167" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/superuser/note.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="447">
+          <caret line="303" column="16" selection-start-line="303" selection-start-column="16" selection-end-line="303" selection-end-column="16" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#3;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#label#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#4;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#4;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#label#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#4;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#5;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#5;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#div#1;n#div#0;n#div#0;n#div#5;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#label#0;n#div#3;n#div#1;n#div#0;n#div#0;n#div#5;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/t_index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="333">
+          <caret line="268" column="79" selection-start-line="268" selection-start-column="79" selection-end-line="268" selection-end-column="79" />
+          <folding>
+            <element signature="e#939#964#0#HTML" expanded="true" />
+            <element signature="e#1007#1042#0#HTML" expanded="true" />
+            <element signature="e#1095#1122#0#HTML" expanded="true" />
+            <element signature="e#1166#1201#0#HTML" expanded="true" />
+            <element signature="e#1330#1365#0#HTML" expanded="true" />
+            <element signature="e#1464#1499#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="160" column="54" lean-forward="true" selection-start-line="160" selection-start-column="54" selection-end-line="160" selection-end-column="54" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/note.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="146" column="10" selection-start-line="146" selection-start-column="10" selection-end-line="146" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/school_note_search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="34" lean-forward="true" selection-start-column="34" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/school_note.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="466">
+          <caret line="99" column="14" lean-forward="true" selection-start-line="99" selection-start-column="14" selection-end-line="99" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/数据库项目/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="318">
+          <caret line="63" column="69" lean-forward="true" selection-start-line="63" selection-start-column="69" selection-end-line="63" selection-end-column="69" />
+          <folding>
+            <element signature="e#629#661#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/teacher_note_serach.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="35" lean-forward="true" selection-start-column="35" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/note_search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="35" lean-forward="true" selection-start-column="35" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/student_note.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="281">
+          <caret line="217" column="33" selection-start-line="217" selection-start-column="33" selection-end-line="217" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/teacher/teacher_note.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="428">
+          <caret line="97" column="27" selection-start-line="97" selection-start-column="27" selection-end-line="97" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/school/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="779">
+          <caret line="41" column="19" selection-start-line="41" selection-start-column="10" selection-end-line="41" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/school/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="27" column="43" lean-forward="true" selection-start-line="27" selection-start-column="43" selection-end-line="27" selection-end-column="43" />
+        <state relative-caret-position="473">
+          <caret line="1952" column="42" lean-forward="true" selection-start-line="1952" selection-start-column="42" selection-end-line="1952" selection-end-column="42" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
           </folding>

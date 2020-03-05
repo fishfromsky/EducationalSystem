@@ -20,6 +20,7 @@ class Stu_table(models.Model):
     jg = models.CharField(max_length=30, null=True)
     sjhm = models.CharField(max_length=30, null=True)
     yxh = models.ForeignKey(School, on_delete=models.CASCADE)
+    note_status = models.IntegerField(default=0)
 
     def __str__(self):
         return self.xh
@@ -33,6 +34,7 @@ class Teacher(models.Model):
     xl = models.CharField(max_length=20, null=True)
     jbgz = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     yxh = models.ForeignKey(School, on_delete=models.CASCADE)
+    note_status = models.IntegerField(default=0)
 
     def __str__(self):
         return self.gh
@@ -110,5 +112,30 @@ class present_semester(models.Model):
     dqxq = models.CharField(max_length=5)
     cjxq_ps = models.CharField(max_length=5, default='0')
     cjxq_ks = models.CharField(max_length=5, default='0')
+
+
+class Note_table(models.Model):
+    gh = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    kh = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    xq = models.CharField(max_length=50)
+    status = models.IntegerField(default=2)
+    content = models.TextField()
+    created_time = models.DateTimeField(auto_now_add=True)
+
+
+class School_Note_table(models.Model):
+    xq = models.CharField(max_length=50)
+    status = models.IntegerField(default=0)
+    content = models.TextField()
+    created_time = models.DateTimeField(auto_now_add=True)
+
+
+class Teacher_Note_table(models.Model):
+    xq = models.CharField(max_length=50)
+    status = models.IntegerField(default=1)
+    content = models.TextField()
+    created_time = models.DateTimeField(auto_now_add=True)
+
+
 
 
