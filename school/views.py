@@ -1624,6 +1624,33 @@ def Get_note(request):
     return render(request, './superuser/school_note.html', context)
 
 
+def Get_Note_Search(request, content):
+    context = {}
+    note_list = School_Note_table.objects.filter(Q(content__contains=content))
+    paginator = Paginator(note_list, 20)
+    page_num = request.GET.get('page', 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+
+    return render(request, './superuser/school_note_search.html', context)
+
+
 @require_http_methods(['POST'])
 def Send_School_Note(request):
     response = {}
@@ -1822,6 +1849,33 @@ def Get_School_Note_teacher(request):
     return render(request, './superuser/teacher_note.html', context)
 
 
+def Get_School_Note_Teacher_Search(request, content):
+    context = {}
+    note_list = Teacher_Note_table.objects.filter(Q(content__contains=content))
+    paginator = Paginator(note_list, 20)
+    page_num = request.GET.get('page', 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+
+    return render(request, './superuser/teacher_note_search.html', context)
+
+
 def Get_School_Note_student(request):
     context = {}
     note_list = Note_table.objects.all()
@@ -1847,6 +1901,33 @@ def Get_School_Note_student(request):
     context['page_range'] = page_range
 
     return render(request, './superuser/student_note.html', context)
+
+
+def Get_School_Note_student_Search(request, content):
+    context = {}
+    note_list = Note_table.objects.filter(Q(content__contains=content))
+    paginator = Paginator(note_list, 20)
+    page_num = request.GET.get('page', 1)
+    page_of_list = paginator.get_page(page_num)
+    current_page_num = page_of_list.number
+
+    page_range = list(range(max(current_page_num - 2, 1), current_page_num)) + \
+                 list(range(current_page_num, min(current_page_num + 2, paginator.num_pages) + 1))
+
+    if page_range[0] - 1 >= 2:
+        page_range.insert(0, '...')
+    if paginator.num_pages - page_range[-1] >= 2:
+        page_range.append('...')
+
+    if page_range[0] != 1:
+        page_range.insert(0, 1)
+    if page_range[-1] != paginator.num_pages:
+        page_range.append(paginator.num_pages)
+
+    context['page_of_list'] = page_of_list
+    context['page_range'] = page_range
+
+    return render(request, './superuser/student_note_search.html', context)
 
 
 def T_Get_School_Note(request, xq):

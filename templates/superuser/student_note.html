@@ -229,6 +229,17 @@
                     toastr.error('删除失败')
                 }
              })
-        })
+        });
+         $("#search_btn").click(function () {
+            let content = $("#search-input").val();
+            if (content === ''){
+                toastr.error('输入内容不能为空')
+            }
+            else{
+                let url = '{% url 'Get_School_Student_Note_Search' 'content' %}';
+                url = url.replace(/content/, content);
+                window.location.href = url;
+            }
+         })
     </script>
 {% endblock %}
