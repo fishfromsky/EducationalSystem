@@ -1736,7 +1736,7 @@ def Delete_Student_Note(request):
 
 def Get_Teacher_Note(request, gh, xq):
     context = {}
-    note = Note_table.objects.filter(gh_id=gh, xq=xq)
+    note = Note_table.objects.filter(gh=gh, xq=xq)
     paginator = Paginator(note, 20)
     page_num = request.GET.get("page", 1)
     page_of_list = paginator.get_page(page_num)
