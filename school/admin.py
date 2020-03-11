@@ -53,13 +53,13 @@ class Open_lessonAdmin(admin.ModelAdmin):
 
 @admin.register(Option_lesson)
 class Option_lessonAdmin(admin.ModelAdmin):
-    list_display = ('xh', 'xq', 'kh', 'gh', 'pscj', 'kscj', 'zpcj')
-    ordering = ('-zpcj',)
+    list_display = ('id', 'xh', 'xq', 'kh', 'gh', 'pscj', 'kscj', 'zpcj', 'credit')
+    ordering = ('id',)
 
 
 @admin.register(present_semester)
 class present_semesterAdmin(admin.ModelAdmin):
-    list_display = ('xq', 'xk', 'dqxq', 'cjxq_ps', 'cjxq_ks')
+    list_display = ('xq', 'xk', 'dqxq', 'cjxq_ps', 'cjxq_ks', 'xkss')
     ordering = ('-id',)
 
 

@@ -46,5 +46,7 @@ urlpatterns = [
     path('delete_note_student/', views.Delete_Student_Note, name='Delete_Student_Note'),
     path('send_school_note/', views.Send_School_Note, name='Send_School_Note'),
     path('send_teacher_note/', views.Send_Teacher_Note, name='Send_Teacher_Note'),
-    path('t_send_note', views.T_Send_Note, name='T_Send_note')
+    path('t_send_note', views.T_Send_Note, name='T_Send_note'),
+    path('save_credit_limit/', views.Save_Credit_Limit, name='Save_Credit_Limit'),
+    path('check_credit/', views.Check_Credit_Limit, name="Check_Credit_Limit")
 ]

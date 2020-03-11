@@ -33,6 +33,7 @@
             <th>平时成绩</th>
             <th>考试成绩</th>
             <th>总评成绩</th>
+            <th>绩点</th>
         </tr>
         {% for lesson in page_of_list %}
             {% csrf_token %}
@@ -48,6 +49,7 @@
                     <input class="form-control btn-control input_cj" type="number" placeholder="{{ lesson.5 }}">
                 </td>
                 <td>{{ lesson.6 }}</td>
+                <td>{{ lesson.7 }}</td>
             </tr>
         {% endfor %}
     </table>

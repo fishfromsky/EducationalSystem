@@ -29,17 +29,13 @@ def Main_Get(request):
     stu_count = Option_lesson.objects.filter(xq=semester).values('xh_id').count()
     teacher_count = Open_lesson.objects.filter(xq=semester).values('gh_id').count()
     cursor = connection.cursor()
-    cursor.execute("select xm,count(xh_id) from school_teacher tb1,school_option_lesson tb2 "
-                   "where tb1.gh=tb2.gh_id and xq='"+semester+"' group by tb1.gh order by 2 desc;")
+    cursor.execute("call teacher_love('"+semester+"')")
     teacher_love = cursor.fetchall()
-    cursor.execute("select km,count(xh_id) from school_option_lesson tb1,school_lesson tb2 where tb1.kh_id=tb2.kh "
-                   "and xq='"+semester+"' group by kh_id order by 2 desc;")
+    cursor.execute("call lesson_love('"+semester+"')")
     lesson_love = cursor.fetchall()
-    cursor.execute("select count(kh_id), mc from school_open_lesson tb1, school_lesson tb2, school_school tb3 where "
-                   "tb3.yxh=tb2.yxh_id and tb2.kh=tb1.kh_id and xq='"+semester+"' group by yxh_id order by 1 desc;")
+    cursor.execute("call school_love('"+semester+"')")
     school_love = cursor.fetchall()
-    cursor.execute("select count(xh_id),mc from school_school tb1,school_lesson tb2,school_option_lesson tb3 where "
-                   "tb1.yxh=tb2.yxh_id and tb2.kh=tb3.kh_id and xq='"+semester+"' group by tb1.yxh order by 1 desc;")
+    cursor.execute("call school_count('"+semester+"')")
     school_count = cursor.fetchall()
     response['stu_count'] = stu_count
     response['teacher_count'] = teacher_count
@@ -1181,11 +1177,13 @@ def Ensure_status(request):
         status = present_semester.objects.get(dqxq='1').xk
         grade_status = present_semester.objects.get(dqxq='1').cjxq_ps
         grade_status_ks = present_semester.objects.get(dqxq='1').cjxq_ks
+        credit_limit = present_semester.objects.get(dqxq='1').xkss
         if status == '1':
             response['status'] = 1
             response['grade'] = grade_status
             response['grade_ks'] = grade_status_ks
             response['semester'] = semester
+            response['credit_limit'] = credit_limit
             response['message'] = 'success'
             response['code'] = 0
         else:
@@ -1193,6 +1191,7 @@ def Ensure_status(request):
             response['grade'] = grade_status
             response['grade_ks'] = grade_status_ks
             response['semester'] = semester
+            response['credit_limit'] = credit_limit
             response['message'] = 'success'
             response['code'] = 0
     return JsonResponse(response)
@@ -1243,21 +1242,17 @@ def Get_Teacher_status(request):
     cursor = connection.cursor()
     semester = request.POST.get('semester')
     number = request.POST.get('number')
-    cursor.execute("select count(kh_id),xq from school_open_lesson where gh_id='"+number+"' group by xq")
+    cursor.execute("call teacher_open_lesson('"+number+"')")
     open_lessons = cursor.fetchall()
-    cursor.execute("select count(xh_id) from school_option_lesson tb1,school_open_lesson tb2 where"
-                                " tb2.gh_id=tb1.gh_id and tb2.kh_id=tb1.kh_id and tb2.xq=tb1.xq and tb1.gh_id="
-                                "'"+number+"' and tb1.xq='"+semester+"';")
+    cursor.execute("call teacher_stu_number('"+number+"','"+semester+"')")
     stu_number = list(cursor.fetchall())[0][0]
     lesson_number = Open_lesson.objects.filter(xq=semester).filter(gh_id=number).values('kh_id').count()
 
-    cursor.execute("select count(xh_id),mc from school_option_lesson tb1, school_stu_table tb2,school_school "
-                   "tb3 where tb1.xh_id=tb2.xh and tb2.yxh_id=tb3.yxh and gh_id='"+number+"' and xq='"+semester+"' group by yxh_id;")
+    cursor.execute("call teacher_stu_distribution('"+number+"','"+semester+"')")
     stu_distribution = cursor.fetchall()
-    cursor.execute("select count(xh_id),xq from school_option_lesson where gh_id='"+number+"' group by xq")
+    cursor.execute("call teacher_semester_list('"+number+"')")
     semester_list = cursor.fetchall()
-    cursor.execute("select count(xh_id),jg from school_option_lesson tb1,school_stu_table tb2 where tb1.xh_id=tb2.xh "
-                   "and gh_id='"+number+"' and xq='"+semester+"' group by jg;")
+    cursor.execute("call teacher_stu_location('"+number+"','"+semester+"')")
     location_list = cursor.fetchall()
     semesters = Option_lesson.objects.all().values('xq').distinct()
     response['open_lessons'] = list(open_lessons)
@@ -1300,10 +1295,7 @@ def t_Lesson(request, number, semester):
 def t_select_lesson(request, number, semester):
     context = {}
     cursor = connection.cursor()
-    cursor.execute("select xh,xm,kh,km,mc,sksj from school_option_lesson tb1,school_open_lesson tb2,school_lesson tb3,"
-                   "school_school tb4,school_stu_table tb5 where tb5.xh=tb1.xh_id and tb4.yxh=tb3.yxh_id and tb3.kh"
-                   "=tb1.kh_id and tb2.kh_id=tb1.kh_id and tb2.gh_id=tb1.gh_id and tb2.xq=tb1.xq and tb1.gh_id='"+number
-                   +"' and tb1.xq='"+semester+"';")
+    cursor.execute("call t_select_lesson_list('"+number+"','"+semester+"')")
     lesson_list = cursor.fetchall()
     paginator = Paginator(list(lesson_list), 20)
     page_num = request.GET.get("page", 1)
@@ -1360,7 +1352,7 @@ def Grade(request, number, semester):
 def Register_Grade(request, number, semester, lesson):
     context = {}
     cursor = connection.cursor()
-    cursor.execute("select xh,xm,kh,km,pscj,kscj,zpcj from school_option_lesson tb1,school_stu_table tb2,school_lesson"
+    cursor.execute("select xh,xm,kh,km,pscj,kscj,zpcj,credit from school_option_lesson tb1,school_stu_table tb2,school_lesson"
                    " tb3 where tb1.xh_id=tb2.xh and "
                    "tb1.kh_id=tb3.kh and gh_id='"+number+"' and xq='"+semester+"' and kh_id='"+lesson+"';")
     lesson_list = cursor.fetchall()
@@ -1389,7 +1381,7 @@ def Register_Grade(request, number, semester, lesson):
 def Check_grade(request, number, semester, lesson):
     context = {}
     cursor = connection.cursor()
-    cursor.execute("select xh,xm,mc,pscj,kscj,zpcj from school_stu_table tb1,school_school tb2,school_option_lesson tb3"
+    cursor.execute("select xh,xm,mc,pscj,kscj,zpcj,credit from school_stu_table tb1,school_school tb2,school_option_lesson tb3"
                    " where tb1.xh=tb3.xh_id and tb2.yxh=tb1.yxh_id and tb3.gh_id='"+number+"' and tb3.xq='"+semester+"'"
                     " and kh_id='"+lesson+"';")
     lesson_list = cursor.fetchall()
@@ -1775,7 +1767,7 @@ def T_Send_Note(request):
         response['code'] = -1
         response['message'] = 'DoseNotExist'
     else:
-        note = Note_table(gh_id=Teacher(gh=gh), kh_id=Lesson(kh=kh), xq=xq, content=content)
+        note = Note_table(gh=gh, kh=kh, xq=xq, content=content)
         note.save()
         response['code'] = 0
         response['message'] = 'success'
@@ -2035,5 +2027,28 @@ def Get_School_to_teacher_note_Search(request, xq, content):
     context['page_range'] = page_range
     return render(request, './teacher/teacher_note_serach.html', context)
 
+
+@require_http_methods(['POST'])
+def Save_Credit_Limit(request):
+    response = {}
+    semester = request.POST.get('semester')
+    credit = request.POST.get('credit')
+    item = present_semester.objects.get(xq=semester)
+    item.xkss = credit
+    item.save()
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
+
+
+@require_http_methods(['POST'])
+def Check_Credit_Limit(request):
+    response = {}
+    semester = request.POST.get('semester')
+    credit = present_semester.objects.get(xq=semester).xkss
+    response['credit'] = credit
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
 
 

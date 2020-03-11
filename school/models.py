@@ -102,6 +102,7 @@ class Option_lesson(models.Model):
     pscj = models.SmallIntegerField(null=True, validators=[MaxValueValidator(100), MinValueValidator(1)])
     kscj = models.SmallIntegerField(null=True, validators=[MaxValueValidator(100), MinValueValidator(1)])
     zpcj = models.SmallIntegerField(null=True, validators=[MaxValueValidator(100), MinValueValidator(1)])
+    credit = models.FloatField(default=0.0)
     class Meta:
         index_together = ["xh", "xq", "kh", "gh"]
 
@@ -112,11 +113,12 @@ class present_semester(models.Model):
     dqxq = models.CharField(max_length=5)
     cjxq_ps = models.CharField(max_length=5, default='0')
     cjxq_ks = models.CharField(max_length=5, default='0')
+    xkss = models.IntegerField(default=30)
 
 
 class Note_table(models.Model):
-    gh = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    kh = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    gh = models.CharField(max_length=20)
+    kh = models.CharField(max_length=20)
     xq = models.CharField(max_length=50)
     status = models.IntegerField(default=2)
     content = models.TextField()

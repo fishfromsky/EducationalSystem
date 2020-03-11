@@ -106,6 +106,11 @@
             margin-top: 160px;
             height: 40px;
         }
+        .edit_semester{
+            position: absolute;
+            left: -14px;
+            bottom: -28px;
+        }
         .search_input{
             outline: none;
             float: left;
@@ -186,19 +191,40 @@
                         <text>管理选课</text>
                     </div>
                     <div class="panel-body">
-                        <div class="form-group">
-                            <label class="col-sm-4" style="margin-right: 6%;line-height: 34px">选课状态</label>
-                            <input type="checkbox" name="checkbox" class="checkbox">
+                        <div class="form-group" style="border-bottom: 1px solid #5bc0de;padding-bottom: 15px">
+                            <div class="row">
+                                <label class="col-sm-4">选课状态</label>
+                                <input type="checkbox" name="checkbox" class="checkbox">
+                            </div>
+                        </div>
+                        <div class="form-group" style="border-bottom: 1px solid #5bc0de;padding-bottom: 15px">
+                            <div class="row">
+                                <label class="col-sm-4">当前学期</label>
+                                <div class="col-sm-6">
+                                    <text style="font-size: 15px" id="semester_status"></text>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" id="edit_semester" class="btn btn-info edit_semester">编辑</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-4">当前学期</label>
-                            <div class="col-sm-8">
-                                <text style="font-size: 15px" id="semester_status"></text>
+                            <div class="row">
+                                <label class="col-sm-4">选课上限</label>
+                                <div class="col-sm-2">
+                                    <text id="credit_limit" class="credit_limit"></text>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" id="edit_credit_limit" class="btn btn-info edit_credit_limit">编辑</button>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" id="check_credit_limit"
+                                            style="margin-left: 25px" class="btn btn-primary edit_credit_limit">查看</button>
+                                </div>
                             </div>
                         </div>
                         <br>
-                        <button type="button" style="width: 93%;margin-left: 10px;margin-top: 18px"  id="edit_semester" class="btn btn-info">编辑当前学期</button>
-                        <div class="grade_box">
+                        <div class="grade_box" style="margin-top: -20px">
                             <div class="grade_container">
                                 <span class="grade-box-text">开启本学期平时成绩登录:</span>
                                 <input class="checkbox_grade" type="checkbox" name="checkbox_grade">
@@ -259,6 +285,73 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" style="width: 20%;margin-right: 50%" id="edit_semester_confirm" type="button">确认</button>
+                        <button class="btn btn-info" style="width: 20%;margin-right: 4%" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+			</div>
+        </div>
+    </div>
+     <div class="modal fade" id="Check_credit_modal" aria-labelledby="MyModalLabel" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 20%;" role="document">
+            <div class="modal-content">
+                <form class="form-horizontal" autocomplete="off" method="post" accept-charset="UTF-8">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">x</button>
+                        <h3>查看学分上限</h3>
+                    </div>
+                    <div class="modal-body">
+                       <div class="form-group">
+                           <div class="row">
+                              <div class="col-sm-4">
+                                    <select id="check_semester_change" style="margin-left: 40px" class="form-control"></select>
+                              </div>
+                              <div class="col-sm-4" style="text-align: center;padding-top: 6px">
+                                  <text id="check_credit_text"></text>
+                              </div>
+                               <div class="col-sm-4">
+                                   <button type="button" id="check_credit_button" class="btn btn-primary">点击查看</button>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" style="width: 20%;margin-right: 50%" data-dismiss="modal" type="button">确认</button>
+                        <button class="btn btn-info" style="width: 20%;margin-right: 4%" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+			</div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal_credit_limit" aria-labelledby="MyModalLabel" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 20%;" role="document">
+            <div class="modal-content">
+                <form class="form-horizontal" autocomplete="off" method="post" accept-charset="UTF-8">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal">x</button>
+                        <h3>编辑学分上限</h3>
+                    </div>
+                    <div class="modal-body">
+                       <div class="form-group">
+                           <div class="row">
+                               <label class="col-sm-4 control-label">学期：</label>
+                               <div class="col-sm-6">
+                                   <select id="credit_semester_change" class="form-control"></select>
+                               </div>
+                           </div>
+                       </div>
+                       <div class="form-group">
+                           <div class="row">
+                               <label class="col-sm-4 control-label">学分上限：</label>
+                               <div class="col-sm-6">
+                                   <input class="form-control" type="number" id="credit_limit_change">
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" style="width: 20%;margin-right: 50%" id="credit_limit_confirm" type="button">确认</button>
                         <button class="btn btn-info" style="width: 20%;margin-right: 4%" data-dismiss="modal">取消</button>
                     </div>
                 </form>
@@ -401,6 +494,77 @@
     </script>
     <script>
         $(function () {
+            $("#check_credit_button").click(function () {
+                let semester = $('#check_semester_change').val();
+                let data = new FormData();
+                data.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+                data.append('semester', semester);
+                $.ajax({
+                    url:'{% url 'Check_Credit_Limit' %}',
+                    type:'post',
+                    data:data,
+                    dataType:'json',
+                    processData:false,
+                    contentType:false,
+                    success(res){
+                        if (res.code === 0){
+                           $("#check_credit_text").text(res.credit.toString())
+                        }
+                        else{
+                            toastr.error('修改失败')
+                        }
+                    },
+                    fail(){
+                        toastr.error('修改失败')
+                    }
+                })
+            });
+            $("#check_credit_limit").click(function () {
+                $("#check_semester_change").val($("#semester_status").text());
+                $("#check_credit_text").text($("#credit_limit").text());
+               $("#Check_credit_modal").modal()
+            });
+            $("#credit_limit_confirm").click(function () {
+                let credit = $("#credit_limit_change").val();
+                let semester = $("#credit_semester_change").val();
+                if (credit <= 0){
+                    toastr.error('上限必须为正')
+                }
+                else if (credit === ''){
+                    toastr.error('上限不能为空')
+                }
+                else{
+                    let data = new FormData();
+                    data.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+                    data.append('semester', semester);
+                    data.append('credit', credit);
+                    $.ajax({
+                        url:'{% url 'Save_Credit_Limit' %}',
+                        type:'post',
+                        data:data,
+                        dataType:'json',
+                        processData:false,
+                        contentType:false,
+                        success(res){
+                            if (res.code === 0){
+                                toastr.success('修改成功');
+                                setTimeout(function () {
+                                    location.reload();
+                                },1000)
+                            }
+                            else{
+                                toastr.error('修改失败')
+                            }
+                        },
+                        fail(){
+                            toastr.error('修改失败')
+                        }
+                    })
+                }
+            });
+            $("#edit_credit_limit").click(function () {
+               $("#modal_credit_limit").modal()
+            });
             $(".checkbox").bootstrapSwitch({
                 onText:'正在选课',
                 offText:'禁止选课',
@@ -482,6 +646,7 @@
                         if (res.status === 1){
                             origin_status = 1;
                             let mes = res.semester;
+                            let limit = res.credit_limit.toString();
                             $("input[name='checkbox']").bootstrapSwitch("state", true);
                             if (res.grade === '1'){
                                  origin_grade_status = 1;
@@ -498,10 +663,15 @@
                                 $("input[name='checkbox_grade_exam']").bootstrapSwitch('state',false);
                             }
                             $("#semester_status").text(mes);
+                            $("#credit_limit").text(limit);
+                            $("#credit_limit_change").val(limit);
                         }
                         if (res.status === 0){
                             let mes = res.semester;
+                            let limit = res.credit_limit.toString();
                             $("#semester_status").text(mes);
+                            $("#credit_limit").text(limit);
+                            $("#credit_limit_change").val(limit);
                             if (res.grade === '1'){
                                 origin_grade_status = 1;
                                 $("input[name='checkbox_grade']").bootstrapSwitch('state',true);
@@ -534,7 +704,9 @@
                 contentType:false,
                 success(res){
                     $.each(res.result, function (key, value) {
-                        $("#semester_change").append("<option>" + value["fields"]["xq"] + "</option>")
+                        $("#semester_change").append("<option>" + value["fields"]["xq"] + "</option>");
+                        $("#credit_semester_change").append("<option>" + value["fields"]["xq"] + "</option>");
+                        $("#check_semester_change").append("<option>" + value["fields"]["xq"] + "</option>");
                     })
                 },
                 fail() {

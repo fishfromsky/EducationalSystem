@@ -5,48 +5,37 @@ import pymysql
 import random
 
 
-def Mysql(conn):
-
-    cur = conn.cursor()
-    cur.execute("select xh from school_stu_table")
-    result = cur.fetchall()
-    numberlist = []
-    for data in result:
-        numberlist.append(data[0])
-
-    lessonlist = []
-    cur.execute("select gh_id,kh_id,xq from school_open_lesson")
-    result1 = cur.fetchall()
-    for data in result1:
-        lessonlist.append(list(data))
-
-    return numberlist, lessonlist
-
-
-def Insert(conn, numberlist, lessonlist):
-    number_length = len(numberlist)
-    lesson_length = len(lessonlist)
-    combineList = []
-    pscjList = [80, 90, 95, 87, 89, 78, 59, 49, 55, 99, 97]
+def Insert(conn):
     cs1 = conn.cursor()
-    for i in range(400):
-        if i % 50 == 0:
-            print(i)
-        index = random.randint(0, len(pscjList) - 1)
-        query = "insert into school_option_lesson(xh_id,xq,kh_id,gh_id,pscj,kscj,zpcj) values (%s,%s,%s,%s,%s,%s,%s);"
-        index_number = random.randint(0, number_length-1)
-        index_lesson = random.randint(0, lesson_length-1)
-        if [index_number, index_lesson] not in combineList:
-            combineList.append([index_number, index_lesson])
-            xh_id = numberlist[index_number]
-            xq = lessonlist[index_lesson][2]
-            kh_id = lessonlist[index_lesson][1]
-            gh_id = lessonlist[index_lesson][0]
-            pscj = pscjList[index]
-            kscj = pscjList[index]
-            zpcj = pscjList[index]
-            values = (xh_id, xq, kh_id, gh_id, pscj, kscj, zpcj)
-            cs1.execute(query, values)
+    query = "select id from school_option_lesson"
+    cs1.execute(query)
+    result = list(cs1.fetchall())
+    for i in range(0, len(result)-1):
+        number = result[i][0]
+        cs1.execute("select zpcj from school_option_lesson where id=%d;" % number)
+        num = cs1.fetchall()[0][0]
+        if num is not None:
+            if num < 60:
+                credit = 0.0
+            elif 60 <= num <= 63:
+                credit = 1.3
+            elif 64 <= num <= 67:
+                credit = 1.5
+            elif 68 <= num <= 71:
+                credit = 2.0
+            elif 72 <= num <= 74:
+                credit = 2.3
+            elif 75 <= num <= 77:
+                credit = 2.7
+            elif 77 <= num <= 81:
+                credit = 3.0
+            elif 82 <= num <= 84:
+                credit = 3.3
+            elif 85 <= num <= 89:
+                credit = 3.7
+            else:
+                credit = 4.0
+            cs1.execute("update school_option_lesson set credit=%f where id=%d" % (credit, number))
     conn.commit()
     cs1.close()
     conn.close()
@@ -57,9 +46,8 @@ if __name__ == '__main__':
         host='127.0.0.1',
         port=3306,
         user='root',
-        passwd='123456',
+        passwd='godj123!@#',
         db='school1'
     )
-    numbers, lessons = Mysql(conn)
-    Insert(conn, numbers, lessons)
+    Insert(conn)
 

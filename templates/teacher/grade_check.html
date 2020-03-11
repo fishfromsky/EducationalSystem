@@ -13,6 +13,7 @@
             <th>平时成绩</th>
             <th>考试成绩</th>
             <th>总评成绩</th>
+            <th>绩点</th>
         </tr>
         {% for lesson in page_of_list %}
             <tr>
@@ -22,6 +23,7 @@
                 <td>{{ lesson.3 }}</td>
                 <td>{{ lesson.4 }}</td>
                 <td>{{ lesson.5 }}</td>
+                <td>{{ lesson.6 }}</td>
             </tr>
         {% endfor %}
     </table>
