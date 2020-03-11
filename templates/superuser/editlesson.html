@@ -26,6 +26,8 @@
             <th>学分</th>
             <th>学时</th>
             <th>院系号</th>
+            <th>平时占比</th>
+            <th>考试占比</th>
             <th></th>
             <th></th>
         </tr>
@@ -36,7 +38,10 @@
                 <td>{{ lesson.xf }}</td>
                 <td>{{ lesson.xs }}</td>
                 <td>{{ lesson.yxh }}</td>
-                <td><button id="confirm" onclick="Select('{{ lesson.kh }}','{{ lesson.km }}','{{ lesson.xf }}','{{ lesson.xs }}','{{ lesson.yxh }}')"
+                <td>{{ lesson.rule_ps }}</td>
+                <td>{{ lesson.rule_ks }}</td>
+                <td><button id="confirm" onclick="Select('{{ lesson.kh }}','{{ lesson.km }}','{{ lesson.xf }}',
+                        '{{ lesson.xs }}','{{ lesson.yxh }}','{{ lesson.rule_ps }}','{{ lesson.rule_ks }}')"
                             type="button" class="btn btn-info">选择</button></td>
                 <td><button type="button" class="btn btn-danger" onclick="Delete('{{ lesson.kh }}')">删除</button></td>
             </tr>
@@ -77,7 +82,7 @@
     <div class="modal fade" id="MyLesson1" aria-labelledby="MyModalLabel" tabindex="-1">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form class="form-horizontal" action="{% url "AmendLesson" %}" autocomplete="off" method="post" accept-charset="UTF-8">
+                <form class="form-horizontal" autocomplete="on" accept-charset="UTF-8">
                     {% csrf_token %}
                     <div class="modal-header">
                         <button class="close" data-dismiss="modal">x</button>
@@ -121,9 +126,21 @@
                             </div>
 				            <div class="col-sm-4 tips"></div>
                         </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">平时成绩占比</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="amend_ps">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">考试成绩占比</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="amend_ks">
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary" type="submit">保存</button>
+                        <button class="btn btn-primary" type="button" id="Amend_Save">保存</button>
                         <button class="btn btn-info" data-dismiss="modal">关闭</button>
                     </div>
                 </form>
@@ -177,6 +194,18 @@
                             </div>
 				            <div class="col-sm-4 tips"></div>
                         </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">平时成绩占比</label>
+                            <div class="col-sm-6">
+                                <input type="number" id="ps_add" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">考试成绩占比</label>
+                            <div class="col-sm-6">
+                                <input type="number" id="ks_add" class="form-control">
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button id="lesson_save" class="btn btn-primary" type="button">保存</button>
@@ -222,12 +251,62 @@
 
 {% block script %}
     <script>
-        function Select(kh,km,xf,xs,yxh) {
+        $("#Amend_Save").click(function () {
+            var number = $("#number").val();
+            var name = $("#lesson_name").val();
+            var credit = $("#credit").val();
+            var hours = $("#hours").val();
+            var school = $("#school").val();
+            var ps = parseInt($("#amend_ps").val());
+            var ks = parseInt($("#amend_ks").val());
+            if (number === "" || name === ""){
+                toastr.error("表格必须填写完整")
+            }
+            else if (number.length !== 8){
+                toastr.error("请输入正确格式的课程号")
+            }
+            else if (ps+ks !== 10){
+                toastr.error('请输入正确格式的成绩占比')
+            }
+            else{
+                var data_obj = new FormData();
+                data_obj.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+                data_obj.append('number', number);
+                data_obj.append('name', name);
+                data_obj.append('credit', credit);
+                data_obj.append('hours', hours);
+                data_obj.append('school', school);
+                data_obj.append('ps', ps);
+                data_obj.append('ks', ks);
+                $.ajax({
+                    url:'{% url "AmendLesson" %}',
+                    type:'post',
+                    data:data_obj,
+                    dataType:'json',
+                    processData:false,
+                    contentType:false,
+                    success(res){
+                        if (res.code === -1){
+                            toastr.error("该课程号已经存在")
+                        }
+                        if (res.code === 0){
+                            location.reload();
+                        }
+                    },
+                    fail(res){
+                        toastr.error("插入失败")
+                    }
+                })
+            }
+        });
+        function Select(kh,km,xf,xs,yxh,ps,ks) {
             $("#number").val(kh);
             $("#lesson_name").val(km);
             $("#credit").val(xf);
             $("#hours").val(xs);
             $("#school").val(yxh);
+            $("#amend_ps").val(parseInt(ps));
+            $("#amend_ks").val(parseInt(ks));
             $("#MyLesson1").modal();
         }
     </script>
@@ -248,11 +327,16 @@
             var credit = $("#credit_add").val();
             var hours = $("#hours_add").val();
             var school = $("#school_add").val();
+            var ps = parseInt($("#ps_add").val());
+            var ks = parseInt($("#ks_add").val());
             if (number === "" || name === ""){
                 toastr.error("表格必须填写完整")
             }
             else if (number.length !== 8){
                 toastr.error("请输入正确格式的课程号")
+            }
+            else if (ps+ks !== 10){
+                toastr.error('请输入正确格式的成绩占比')
             }
             else{
                 var data_obj = new FormData();
@@ -262,6 +346,8 @@
                 data_obj.append('credit', credit);
                 data_obj.append('hours', hours);
                 data_obj.append('school', school);
+                data_obj.append('ps', ps);
+                data_obj.append('ks', ks);
                 $.ajax({
                     url:'{% url "AddLesson" %}',
                     type:'post',

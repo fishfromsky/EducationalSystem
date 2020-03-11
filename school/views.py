@@ -841,27 +841,34 @@ def Add_Lesson(request):
     credit = request.POST.get('credit')
     hours = request.POST.get('hours')
     school = request.POST.get('school')
+    rule_ps = request.POST.get('ps')
+    rule_ks = request.POST.get('ks')
     if Lesson.objects.filter(kh=number).count():
         response['message'] = 'ExistError'
         response['code'] = -1
     else:
-        lesson = Lesson(kh=number, km=name, xf=credit, xs=hours, yxh=School(yxh=school))
+        lesson = Lesson(kh=number, km=name, xf=credit, xs=hours, yxh=School(yxh=school), rule_ps=rule_ps, rule_ks=rule_ks)
         lesson.save()
         response['message'] = 'success'
         response['code'] = 0
     return JsonResponse(response)
 
 
+@require_http_methods(['POST'])
 def AmendLesson(request):
-    if request.method == 'POST':
-        number = request.POST.get('number')
-        name = request.POST.get('lesson_name')
-        credit = request.POST.get('credit')
-        hours = request.POST.get('hours')
-        school = request.POST.get('school')
-        lesson = Lesson(kh=number, km=name, xf=credit, xs=hours, yxh=School(yxh=school))
-        lesson.save()
-        return redirect(reverse('EditLesson'))
+    response = {}
+    number = request.POST.get('number')
+    name = request.POST.get('name')
+    credit = request.POST.get('credit')
+    hours = request.POST.get('hours')
+    school = request.POST.get('school')
+    ps = request.POST.get('ps')
+    ks = request.POST.get('ks')
+    lesson = Lesson(kh=number, km=name, xf=credit, xs=hours, yxh=School(yxh=school), rule_ps=ps, rule_ks=ks)
+    lesson.save()
+    response['code'] = 0
+    response['message'] = 'success'
+    return JsonResponse(response)
 
 
 def DeleteLesson(request):

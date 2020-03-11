@@ -26,6 +26,8 @@
             <th>学分</th>
             <th>学时</th>
             <th>院系号</th>
+            <th>平时占比</th>
+            <th>考试占比</th>
         </tr>
 
         {% for lesson in page_of_list %}
@@ -35,6 +37,8 @@
                 <td>{{ lesson.xf }}</td>
                 <td>{{ lesson.xs}}</td>
                 <td>{{ lesson.yxh }}</td>
+                <td>{{ lesson.rule_ps }}</td>
+                <td>{{ lesson.rule_ks }}</td>
             </tr>
         {% endfor %}
     </table>
@@ -117,6 +121,20 @@
                             </div>
 				            <div class="col-sm-4 tips"></div>
                         </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">平时成绩占比</label>
+                            <div class="col-sm-6">
+                                <input type="number" id="rule_ps" name="rule_ps" class="form-control"
+                                       placeholder="请输入平时成绩占比">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">考试成绩占比</label>
+                            <div class="col-sm-6">
+                                <input type="number" id="rule_ks" name="rule_ks" class="form-control"
+                                       placeholder="请输入考试成绩占比">
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button id="lesson_save" class="btn btn-primary" type="button">保存</button>
@@ -155,11 +173,16 @@
             var credit = $("#credit").val();
             var hours = $("#hours").val();
             var school = $("#school").val();
+            var rule_ps = parseInt($("#rule_ps").val());
+            var rule_ks = parseInt($("#rule_ks").val());
             if (number.length !== 8){
                 toastr.error("输入正确的课号")
             }
             else if (number === "" || name === ""){
                 toastr.error("表格必须填写完整")
+            }
+            else if (rule_ks + rule_ps !== 10){
+                toastr.error('输入正确的占比数')
             }
             else{
                 var data_obj = new FormData();
@@ -169,6 +192,8 @@
                 data_obj.append('credit', credit);
                 data_obj.append('hours', hours);
                 data_obj.append('school', school);
+                data_obj.append('ps', rule_ps);
+                data_obj.append('ks', rule_ks);
                 $.ajax({
                     url:'{% url "AddLesson" %}',
                     type:'post',
